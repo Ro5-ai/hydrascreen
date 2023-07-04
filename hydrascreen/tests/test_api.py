@@ -39,7 +39,7 @@ def test_inference_error_response(
 ):
     mock_response = Mock()
     mock_response.status_code = 500
-    mock_response.content = b"Test content"
+    mock_response.json = lambda: {"detail": "Mock error"}
     inference_request.return_value = mock_response
 
     with pytest.raises(APIError):
@@ -68,6 +68,7 @@ def test_upload_pdb_error_response(upload_pdb_request, mock_credentials: APICred
     mock_pdb_file.touch()
     mock_response = Mock()
     mock_response.status_code = 500
+    mock_response.json = lambda: {"detail": "Mock error"}
     upload_pdb_request.return_value = mock_response
 
     with pytest.raises(APIError):
@@ -100,6 +101,7 @@ def test_upload_sdf_error_response(upload_sdf_request, mock_credentials: APICred
     mock_sdf_file.touch()
     mock_response = Mock()
     mock_response.status_code = 500
+    mock_response.json = lambda: {"detail": "Mock error"}
     upload_sdf_request.return_value = mock_response
 
     with pytest.raises(APIError):
