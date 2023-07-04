@@ -49,10 +49,12 @@ def inference(credentials: APICredentials, inference_pairs: List[Dict[str, str]]
         },
     )
 
-    if response.status_code != 200:
-        raise APIError(f"Failed to retrieve predictions: {response.content.decode('utf-8')}")
+    response_json = response.json()
 
-    csv_response = StringIO(response.json())
+    if response.status_code != 200:
+        raise APIError(f"Failed to retrieve predictions: {response_json['detail']}")
+
+    csv_response = StringIO(response_json)
 
     return pd.read_csv(csv_response)
 
@@ -75,12 +77,12 @@ def upload_pdb(credentials: APICredentials, pdb_file: BufferedReader) -> str:
     files = {"file": pdb_file}
     response = requests.post(url=f"{API_URL}/upload-pdb", params=query_params, files=files)
 
+    response_json = response.json()
+
     if response.status_code != 200:
-        raise APIError(f"Failed to upload PDB file: {response.content.decode('utf-8')}")
+        raise APIError(f"Failed to upload PDB file: {response_json['detail']}")
 
-    s3_key = response.json()["s3_key"]
-
-    return s3_key
+    return response_json["s3_key"]
 
 
 def upload_sdf(credentials: APICredentials, pdb_s3_path: str, sdf_file: BufferedReader) -> str:
@@ -102,9 +104,9 @@ def upload_sdf(credentials: APICredentials, pdb_s3_path: str, sdf_file: Buffered
     files = {"file": sdf_file}
     response = requests.post(url=f"{API_URL}/upload-sdf", params=query_params, files=files)
 
+    response_json = response.json()
+
     if response.status_code != 200:
-        raise APIError(f"Failed to upload SDF file: {response.content.decode('utf-8')}")
+        raise APIError(f"Failed to upload SDF file: {response_json['detail']}")
 
-    s3_key = response.json()["s3_key"]
-
-    return s3_key
+    return response_json["s3_key"]
