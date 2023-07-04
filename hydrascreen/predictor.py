@@ -1,11 +1,7 @@
 from pathlib import Path
 from typing import List
-from hydrascreen.api import APICredentials, APIError, inference, upload_pdb, upload_sdf
+from hydrascreen.api import APICredentials, inference, upload_pdb, upload_sdf
 import pandas as pd
-
-
-class FileUploadError(Exception):
-    pass
 
 
 class HydraScreen:
@@ -32,24 +28,19 @@ class HydraScreen:
         Raises:
             FileUploadError: If there is an error in uploading a file.
         """
-        try:
-            with open(protein_file, "rb") as f:
-                pdb_s3_path = upload_pdb(credentials=self.api_credentials, pdb_file=f)
-        except APIError:
-            raise FileUploadError(f"Failed to upload {protein_file}")
+
+        with open(protein_file, "rb") as f:
+            pdb_s3_path = upload_pdb(credentials=self.api_credentials, pdb_file=f)
 
         ligand_s3_paths = []
         for ligand_file in ligand_files:
-            try:
-                with open(ligand_file, "rb") as f:
-                    ligand_s3_path = upload_sdf(
-                        credentials=self.api_credentials,
-                        pdb_s3_path=pdb_s3_path,
-                        sdf_file=f,
-                    )
-                ligand_s3_paths.append(ligand_s3_path)
-            except APIError:
-                raise FileUploadError(f"Failed to upload {ligand_file}")
+            with open(ligand_file, "rb") as f:
+                ligand_s3_path = upload_sdf(
+                    credentials=self.api_credentials,
+                    pdb_s3_path=pdb_s3_path,
+                    sdf_file=f,
+                )
+            ligand_s3_paths.append(ligand_s3_path)
 
         inference_pairs = [
             {"protein": pdb_s3_path, "docked_ligand": ligand_s3_path}
