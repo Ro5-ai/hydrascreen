@@ -19,8 +19,10 @@ class HydraScreen:
         Performs predictions for a given protein and a list of docked ligand files.
 
         Args:
-            protein_file (Path): The file path of the protein file. Protein .pdb file needs to include explicit hydrogens and charges, and to be void of waters, metal ions, and salts.
-            ligand_files (List[Path]): A list of file paths for the docked ligand files. Ligand .sdf files must contain one or more docked poses per file, with all hydrogens and charges.
+            protein_file (Path): The file path of the protein file. Protein .pdb file needs to include explicit hydrogens and charges,
+            and to be void of waters, metal ions, and salts.
+            ligand_files (List[Path]): A list of file paths for the docked SDF ligand files.
+            Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
 
         Returns:
             pd.DataFrame: A DataFrame containing the predictions.

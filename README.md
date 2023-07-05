@@ -30,9 +30,10 @@ predictor = login(
 
 Call the `predict_for_protein` function to get predictions for your docked protein-ligand pairs.
 
-`protein_file` needs to be a `Path` object for a PDB file.
+`protein_file` needs to be a `Path` object for a PDB file. Protein .pdb file needs to include explicit hydrogens and charges, and to be void of waters, metal ions, and salts.
 
-`ligand_files` needs to be a list of `Path` objects for docked SDF files. 
+`ligand_files` needs to be a list of `Path` objects for docked SDF files. Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
+
 
 ```python
 from pathlib import Path
@@ -77,6 +78,19 @@ for input_pair in input_pairs:
 ```
 
 The output will be a list of `pandas DataFrames` with the prediction results for your protein-ligand pairs.
+
+### Outputs
+
+The resulting output is a pandas DataFrame with the following format.
+
+```csv
+pdb_id,  ligand_conformer_id,      pki,           pose
+protein, protein_docked_ligand_0,  0.84967568666, 0.9360706533333333
+protein, protein_docked_ligand_1,  0.8498707,     0.9487579333333334
+protein, protein_docked_ligand_2,  0.71245265,    0.8837728666666665
+protein, protein_docked_ligand_3,  0.7982348,     0.9275542666666666
+protein, protein_docked_ligand_4,  0.62997039999, 0.8115468833333334
+```
 
 ## Development
 
