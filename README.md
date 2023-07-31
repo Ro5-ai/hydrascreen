@@ -38,16 +38,20 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 ```python
 from pathlib import Path
 
-results = predictor.predict_for_protein(
-                protein_file=Path('/path/to/protein.pdb'), 
-                ligand_files=[
-                    Path('/path/to/ligand1.sdf'), 
-                    Path('/path/to/ligand2.sdf')
-                    ]
-                ) 
+affinity, pose = predictor.predict_for_protein(
+                    protein_file=Path('/path/to/protein.pdb'), 
+                    ligand_files=[
+                        Path('/path/to/ligand1.sdf'), 
+                        Path('/path/to/ligand2.sdf')
+                        ]
+                    ) 
 ```
 
-The output will be a `pandas DataFrame` for your protein-ligand pair predictions.
+The output will be 2 `pandas DataFrames` for your protein-ligand pair predictions:
+<ul> 
+<li><b>affinity</b>: aggregated affinity scores of each protein-ligand complex </li>
+<li><b>pose</b>: pose scores for each pose separately</li>
+</ul>
 
 If you want to run multiple proteins with their ligands you can use the code as follows:
 
@@ -71,25 +75,35 @@ input_pairs = [
     }
 ]
 
-results = []
+affinities = []
+poses = []
 for input_pair in input_pairs:
-    result = predictor.predict_for_protein(**input_pair)
-    results.append(result)
+    affinity, pose = predictor.predict_for_protein(**input_pair)
+    affinities.append(affinity)
+    poses.append(pose)
 ```
 
-The output will be a list of `pandas DataFrames` with the prediction results for your protein-ligand pairs.
+The output will be 2 lists of `pandas DataFrames` with the prediction results for your protein-ligand pairs.
 
 ### Outputs
 
-The resulting output is a pandas DataFrame with the following format.
+Below is an example of the resulting affinity and pose resulting DaraFrames for a protein and 2 docked ligands, with 2 and 3 docked poses respectively.
 
+#### Affinity
 ```csv
-pdb_id,  ligand_conformer_id,      pki,           pose
-protein, protein_docked_ligand_0,  0.84967568666, 0.9360706533333333
-protein, protein_docked_ligand_1,  0.8498707,     0.9487579333333334
-protein, protein_docked_ligand_2,  0.71245265,    0.8837728666666665
-protein, protein_docked_ligand_3,  0.7982348,     0.9275542666666666
-protein, protein_docked_ligand_4,  0.62997039999, 0.8115468833333334
+pdb_id,  ligand_id,                pki,           
+protein, protein_docked_ligand_0,  0.84967568666
+protein, protein_docked_ligand_1,  0.8498707
+```
+
+#### Pose
+```csv
+pdb_id,  ligand_id,             pose_id,  pose
+protein, protein_docked_ligand_0,  0, 0.9360706533333333
+protein, protein_docked_ligand_0,  1, 0.9487579333333334
+protein, protein_docked_ligand_1,  0, 0.8837728666666665
+protein, protein_docked_ligand_1,  1, 0.9275542666666666
+protein, protein_docked_ligand_1,  2, 0.8115468833333334
 ```
 
 ## Development

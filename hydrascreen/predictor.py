@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 from hydrascreen.api import APICredentials, inference, upload_pdb, upload_sdf
 import pandas as pd
 
@@ -14,7 +14,24 @@ class HydraScreen:
         """
         self.api_credentials = api_credentials
 
-    def predict_for_protein(self, protein_file: Path, ligand_files: List[Path]) -> pd.DataFrame:
+    @staticmethod
+    def _split_inference_results(results: pd.DataFrame) -> Tuple[pd.DataFrame]:
+        """
+        Splits the inference results to produce 2 dataframes, one with aggregated affinity scores and one with pose scores.
+
+        Args:
+            results (pd.DataFrame): Results from the inference API call.
+        Returns:
+            affinity (pd.DataFrame): DataFrame with the aggregated affinity scores for each protein-ligand complex.
+            pose (pd.DataFrame): DataFrame with the pose scores for each pose separately.
+        """
+        affinity = results[results['pose_id'].isna()].drop(['pose_id','pose'], axis=1)
+
+        pose = results[results['pki'].isna()].drop(['pki'], axis=1).astype({'pose_id': int})
+
+        return affinity, pose
+
+    def predict_for_protein(self, protein_file: Path, ligand_files: List[Path]) -> Tuple[pd.DataFrame]:
         """
         Performs predictions for a given protein and a list of docked ligand files.
 
@@ -25,7 +42,8 @@ class HydraScreen:
             Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
 
         Returns:
-            pd.DataFrame: A DataFrame containing the predictions.
+            affinity (pd.DataFrame): DataFrame with the aggregated affinity scores for each protein-ligand complex.
+            pose (pd.DataFrame): DataFrame with the pose scores for each pose separately.
 
         Raises:
             FileUploadError: If there is an error in uploading a file.
@@ -49,4 +67,6 @@ class HydraScreen:
             for ligand_s3_path in ligand_s3_paths
         ]
 
-        return inference(credentials=self.api_credentials, inference_pairs=inference_pairs)
+        results = inference(credentials=self.api_credentials, inference_pairs=inference_pairs)
+
+        return self._split_inference_results(results)
