@@ -38,18 +38,18 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 ```python
 from pathlib import Path
 
-affinity, pose = predictor.predict_for_protein(
-                    protein_file=Path('/path/to/protein.pdb'), 
-                    ligand_files=[
-                        Path('/path/to/ligand1.sdf'), 
-                        Path('/path/to/ligand2.sdf')
-                        ]
-                    ) 
+results = predictor.predict_for_protein(
+            protein_file=Path('/path/to/protein.pdb'), 
+            ligand_files=[
+                Path('/path/to/ligand1.sdf'), 
+                Path('/path/to/ligand2.sdf')
+                ]
+            ) 
 ```
 
-The output will be 2 `pandas DataFrames` for your protein-ligand pair predictions:
-- **affinity**: aggregated affinity scores of each protein-ligand complex
-- **pose**: pose scores for each pose separately
+The output will be a `results` dataclass with 2 entries which are `pandas DataFrames` for your protein-ligand pair predictions:
+- **results.affinity**: aggregated affinity scores of each protein-ligand complex
+- **results.pose**: pose scores for each pose separately
 
 If you want to run multiple proteins with their ligands you can use the code as follows:
 
@@ -76,16 +76,16 @@ input_pairs = [
 affinities = []
 poses = []
 for input_pair in input_pairs:
-    affinity, pose = predictor.predict_for_protein(**input_pair)
-    affinities.append(affinity)
-    poses.append(pose)
+    results = predictor.predict_for_protein(**input_pair)
+    affinities.append(results.affinity)
+    poses.append(results.pose)
 ```
 
 The output will be 2 lists of `pandas DataFrames` with the prediction results for your protein-ligand pairs.
 
 ### Outputs
 
-Below is an example of the resulting affinity and pose resulting DaraFrames for a protein and 2 docked ligands, with 2 and 3 docked poses respectively.
+Below is an example of the resulting affinity and pose DaraFrames for a protein and 2 docked ligands, with 2 and 3 docked poses respectively.
 
 #### Affinity
 ```csv

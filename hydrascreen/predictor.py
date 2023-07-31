@@ -1,7 +1,14 @@
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 from hydrascreen.api import APICredentials, inference, upload_pdb, upload_sdf
 import pandas as pd
+from dataclasses import dataclass
+
+
+@dataclass
+class InferenceResults:
+    affinity: pd.DataFrame
+    pose: pd.DataFrame
 
 
 class HydraScreen:
@@ -15,25 +22,23 @@ class HydraScreen:
         self.api_credentials = api_credentials
 
     @staticmethod
-    def _split_inference_results(results: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    def _split_inference_results(results: pd.DataFrame) -> InferenceResults:
         """
         Splits the inference results to produce 2 dataframes, one with aggregated affinity scores and one with pose scores.
 
         Args:
             results (pd.DataFrame): Results from the inference API call.
         Returns:
-            affinity (pd.DataFrame): DataFrame with the aggregated affinity scores for each protein-ligand complex.
-            pose (pd.DataFrame): DataFrame with the pose scores for each pose separately.
+            results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
+            and pose shows the pose scores.
         """
         affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose"], axis=1)
 
         pose = results[results["pki"].isna()].drop(["pki"], axis=1).astype({"pose_id": int})
 
-        return affinity, pose
+        return InferenceResults(affinity=affinity, pose=pose)
 
-    def predict_for_protein(
-        self, protein_file: Path, ligand_files: List[Path]
-    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    def predict_for_protein(self, protein_file: Path, ligand_files: List[Path]) -> InferenceResults:
         """
         Performs predictions for a given protein and a list of docked ligand files.
 
@@ -44,8 +49,8 @@ class HydraScreen:
             Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
 
         Returns:
-            affinity (pd.DataFrame): DataFrame with the aggregated affinity scores for each protein-ligand complex.
-            pose (pd.DataFrame): DataFrame with the pose scores for each pose separately.
+            results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
+            and pose shows the pose scores.
 
         Raises:
             FileUploadError: If there is an error in uploading a file.
