@@ -48,10 +48,8 @@ affinity, pose = predictor.predict_for_protein(
 ```
 
 The output will be 2 `pandas DataFrames` for your protein-ligand pair predictions:
-<ul> 
-<li><b>affinity</b>: aggregated affinity scores of each protein-ligand complex </li>
-<li><b>pose</b>: pose scores for each pose separately</li>
-</ul>
+- **affinity**: aggregated affinity scores of each protein-ligand complex
+- **pose**: pose scores for each pose separately
 
 If you want to run multiple proteins with their ligands you can use the code as follows:
 
