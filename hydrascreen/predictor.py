@@ -15,7 +15,7 @@ class HydraScreen:
         self.api_credentials = api_credentials
 
     @staticmethod
-    def _split_inference_results(results: pd.DataFrame) -> Tuple[pd.DataFrame]:
+    def _split_inference_results(results: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Splits the inference results to produce 2 dataframes, one with aggregated affinity scores and one with pose scores.
 
@@ -25,13 +25,15 @@ class HydraScreen:
             affinity (pd.DataFrame): DataFrame with the aggregated affinity scores for each protein-ligand complex.
             pose (pd.DataFrame): DataFrame with the pose scores for each pose separately.
         """
-        affinity = results[results['pose_id'].isna()].drop(['pose_id','pose'], axis=1)
+        affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose"], axis=1)
 
-        pose = results[results['pki'].isna()].drop(['pki'], axis=1).astype({'pose_id': int})
+        pose = results[results["pki"].isna()].drop(["pki"], axis=1).astype({"pose_id": int})
 
         return affinity, pose
 
-    def predict_for_protein(self, protein_file: Path, ligand_files: List[Path]) -> Tuple[pd.DataFrame]:
+    def predict_for_protein(
+        self, protein_file: Path, ligand_files: List[Path]
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Performs predictions for a given protein and a list of docked ligand files.
 
