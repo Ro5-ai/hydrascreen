@@ -1,7 +1,7 @@
 from hydrascreen.api import APICredentials
 from hydrascreen.predictor import HydraScreen
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 def login(email: str, organization: str) -> HydraScreen:
