@@ -1,7 +1,7 @@
 [![Tests](https://github.com/Ro5-ai/hydrascreen/actions/workflows/run_tests.yml/badge.svg)](https://github.com/Ro5-ai/hydrascreen/actions/workflows/run_tests.yml)
 # Hydrascreen
 
-This codebase provides functionality for making predictions using the HydraScreen API. It allows users to upload protein and ligand files, perform predictions, and retrieve the predicted affinity and pose score (probability) for each prediction. The GUI tool with the same functionality can be found here: [HydraScreen GUI](https://hydrascreen.ro5.ai/).
+This codebase provides functionality for making predictions using the HydraScreen API. It allows users to upload protein and ligand files, perform predictions, and retrieve the predicted affinity and pose confidence for each prediction. The GUI tool with the same functionality can be found here: [HydraScreen GUI](https://hydrascreen.ro5.ai/).
 
 
 ## Installation
@@ -89,14 +89,14 @@ Below is an example of the resulting affinity and pose DaraFrames for a protein 
 
 #### Affinity
 ```csv
-pdb_id,  ligand_id,                pki,           
+pdb_id,  ligand_id,                affinity,           
 protein, protein_docked_ligand_0,  0.84967568666
 protein, protein_docked_ligand_1,  0.8498707
 ```
 
 #### Pose
 ```csv
-pdb_id,  ligand_id,             pose_id,  pose
+pdb_id,  ligand_id,             pose_id,  pose_confidence
 protein, protein_docked_ligand_0,  0, 0.9360706533333333
 protein, protein_docked_ligand_0,  1, 0.9487579333333334
 protein, protein_docked_ligand_1,  0, 0.8837728666666665
@@ -114,4 +114,4 @@ pre-commit install
 ```
 
 ## License
-TBD
+HydraScreen is available restricted to Non-Commercial Use. For more information see the LICENSE file.
