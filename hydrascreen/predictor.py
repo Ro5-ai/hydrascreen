@@ -4,9 +4,6 @@ from hydrascreen.api import APICredentials, inference, upload_pdb, upload_sdf
 import pandas as pd
 from dataclasses import dataclass
 
-AFFINITY_COLUMN_NAME = "affinity"
-POSE_COLUMN_NAME = "pose_confidence"
-
 
 @dataclass
 class InferenceResults:
@@ -35,12 +32,10 @@ class HydraScreen:
             results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
             and pose shows the pose scores.
         """
-        affinity = results[results["pose_id"].isna()].drop(["pose_id", POSE_COLUMN_NAME], axis=1)
+        affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose_confidence"], axis=1)
 
         pose = (
-            results[results[AFFINITY_COLUMN_NAME].isna()]
-            .drop([AFFINITY_COLUMN_NAME], axis=1)
-            .astype({"pose_id": int})
+            results[results["affinity"].isna()].drop(["affinity"], axis=1).astype({"pose_id": int})
         )
 
         return InferenceResults(affinity=affinity, pose=pose)
