@@ -7,6 +7,7 @@ from dataclasses import dataclass
 AFFINITY_COLUMN_NAME = "affinity"
 POSE_COLUMN_NAME = "pose_confidence"
 
+
 @dataclass
 class InferenceResults:
     affinity: pd.DataFrame
@@ -36,7 +37,11 @@ class HydraScreen:
         """
         affinity = results[results["pose_id"].isna()].drop(["pose_id", POSE_COLUMN_NAME], axis=1)
 
-        pose = results[results[AFFINITY_COLUMN_NAME].isna()].drop([AFFINITY_COLUMN_NAME], axis=1).astype({"pose_id": int})
+        pose = (
+            results[results[AFFINITY_COLUMN_NAME].isna()]
+            .drop([AFFINITY_COLUMN_NAME], axis=1)
+            .astype({"pose_id": int})
+        )
 
         return InferenceResults(affinity=affinity, pose=pose)
 
