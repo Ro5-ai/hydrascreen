@@ -32,9 +32,11 @@ class HydraScreen:
             results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
             and pose shows the pose scores.
         """
-        affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose"], axis=1)
+        affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose_confidence"], axis=1)
 
-        pose = results[results["pki"].isna()].drop(["pki"], axis=1).astype({"pose_id": int})
+        pose = (
+            results[results["affinity"].isna()].drop(["affinity"], axis=1).astype({"pose_id": int})
+        )
 
         return InferenceResults(affinity=affinity, pose=pose)
 
