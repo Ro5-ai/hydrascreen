@@ -88,6 +88,10 @@ The output will be 2 lists of `pandas DataFrames` with the prediction results fo
 Below is an example of the resulting affinity and pose DaraFrames for a protein and 2 docked ligands, with 2 and 3 docked poses respectively.
 
 #### Affinity
+Columns:
+ - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
+ - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
+ - **affinity**: Predicted affinity of protein-ligand pair overall, expressed in pKi units.
 ```csv
 pdb_id,  ligand_id,                affinity,           
 protein, protein_docked_ligand_0,  0.84967568666
@@ -95,6 +99,11 @@ protein, protein_docked_ligand_1,  0.8498707
 ```
 
 #### Pose
+Columns:
+ - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
+ - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
+ - **pose_id**: Sequential pose number based on the order of the docked ligand poses in the SDF file.
+ - **pose_confidence**: Pose confidence, ranging from low (0) to high (1), indicating the model's confidence that the pose could be the true, protein-ligand co-crystal structure. Note that this is solely based on the model's prediction and not a direct comparison with an existing co-crystal structure.
 ```csv
 pdb_id,  ligand_id,             pose_id,  pose_confidence
 protein, protein_docked_ligand_0,  0, 0.9360706533333333
