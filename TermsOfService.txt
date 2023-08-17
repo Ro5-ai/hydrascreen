@@ -1,0 +1,29 @@
+SOFTWARE USE TERMS AND CONDITIONS
+Ro5, Inc.
+
+Your use of the software is subject to certain conditions, listed below, which you accept once you use the software.   Please read these conditions carefully.​
+​
+By using Ro5’s software, you do not acquire any right, title or interest in the software or materials provided in support, nor is any agency relationship (partnership, joint venture, etc.) created between you and Ro5.  You have a limited license to use the software for your own individual, academic, and commercial purposes.   You may not change, download, or modify the software.  
+
+The logos, intellectual property, and trademarks of Ro5, Inc. remain the property of Ro5.
+
+Before continuing on Ro5’s website, you should  read our Privacy Policy.  It will help you better understand our practices.
+
+By using Ro5 Services, you agree that you will not use Ro5’s software in ways that violate laws or contracts with others.   
+
+You own what you upload and results produced from your uploaded data in the Machine Learning Workstation or App Store. Any original data provided to Ro5.ai inc. remains yours and is protected by applicable intellectual property laws. Ro5 reserves the right to remove any content from Ro5.ai inc. at any time, for any reason, in our sole discretion, and without notice.
+
+The use and transfer of information received from Google APIs adhere to the Google API Services User Data Policy, including the Limited Use requirements. For more information, please refer to the Google API Services User Data Policy at https://developers.google.com/terms/api-services-user-data-policy.
+
+All communications with us are electronic, and you agree that electronic communications meet the legal requirements of “a writing.” Every time you send us an email or visit our website, you are going to be communicating with us. By communicating with us, you consent to receive communications from us. 
+
+Any dispute relating to your visit to this website or to Services you use shall be governed by Delaware law and filed and heard in state or federal court of Delaware, and you consent to exclusive jurisdiction and venue of such courts.
+
+If you are an owner of an account on this website, you alone are responsible for maintaining the confidentiality of your private user details (username and password). You are responsible for all activities that occur under your account or password. We reserve all rights to terminate accounts and edit or remove content.
+
+If you have any questions regarding these Terms of Service, please contact us by sending an email to info@ro5.ai.
+
+
+THE SOFTWARE, ACCOMPANYING WRITTEN MATERIALS, AND ANY SERVICES PROVIDED  ARE PROVIDED "AS IS" WITHOUT WARRANTY, EXPRESS OR IMPLIED, OF ANY KIND, AND  Ro5, INC. SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES, INCLUDING WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE AND MERCHANTABILITY.   Ro5 IS NOT LIABLE TO ANY  USER OF ITS SOFTWARE (OR THIRD PARTY) FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS A RESULT OF ANY USE OF Ro5 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+ALL SOFTWARE AND MATERIALS © Ro5, INC.
