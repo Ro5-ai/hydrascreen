@@ -1,0 +1,63 @@
+Ro5 Inc. Privacy Policy
+
+
+Ro5 Inc. (the “Company”) is committed to maintaining strong privacy protections for its users. Our Privacy Policy  explains how we collect, use and protect information you give us.   The Privacy Policy also helps you make decisions about your information when using our Service.  
+ 
+In this agreement,  “Site” refers to the Company’s website, https://www.ro5.ai and other websites with the “ro5.ai” root domain. “Service” refers to the Company’s services used with or via the Site. “Product” means our software or other system that you use, compiled or manufactured by the Company. Here are the some of the Services available to our users:  
+ 
+Upload data to our Site from your computer’s local storage or a range of remote storages including Google Drive and AWS S3.
+Store, process, clean, edit and view data that either you have uploaded or selected from our open data collection.
+Use our Applets, Apps and modules to train machine learning models with your data or our open data, and visualize results of said model training.
+Use our Applets, Apps and modules to run queries of public data, collect results, visualize results and summarize them.
+ 
+The terms “we,” “us,” and “our” refer to the Company. “You” refers to you, as a user of our Site or our Service. By accessing our Site or our Service, you accept our Privacy Policy and Terms of Use, and you consent to our collection, storage, use and disclosure of your Personal Information as described in this Privacy Policy. 
+
+If you have any questions about privacy, please email privacy@ro5.ai.
+
+Information Ro5 Inc. May Collect From You
+​We collect information  to provide AI-based software services to you, to improve our Site and to run our business. We collect “Non-Personal Information,” “Personal Information,”. Non-Personal Information includes information by which you cannot be identified, such as anonymous usage data, error logs, activity logs, general demographic information, referring/exit pages and URLs, platform types, preferences you submit, and preferences that are generated based on the data you submit. Personal Information includes your email, which you submit to us through the registration process at the Site. Your email may be used in order to reach out to you for your feedback and improvement of our products; you may opt out of these communications at any time.
+
+Information That You Voluntarily Provide
+In the case of sensitive data (e.g. medical information), you agree to and accept full responsibility for obtaining all necessary permissions and informed consent from all parties from which your submitted data may belong to.  ​
+
+HIPAA and Protected Health Information.
+Ro5 Inc. is not a Covered Entity as that term is defined in the Health Insurance Portability and Accountability Act of 1996 (HIPAA).   Ro5 does not make any promises or assurances of any kind concerning your, Ro5’s or anyone else’s compliance with HIPAA and its regulations concerning Protected Health Information (PHI).  If you are subject to HIPAA, you agree that you bear sole responsibility for HIPAA compliance.  You also agree that any sensitive personal data you use or transmit will be anonymized or pseudonymized, so that the data cannot be used to identify an individual.    You further agree to indemnify and hold harmless Ro5 Inc. of and from any and all claims, demands, losses, causes of action, damage, lawsuits, judgments, including attorneys' fees and costs, arising out of or relating to your uploading, storing, or transferring of data determined to be in violation of HIPAA requirements, or that could be used to identify the individual from whom it came.   
+​
+User Account Information/Personally Identifiable Information
+To activate a Service you do not need to submit any Personal Information other than your email address. Continued use of Ro5 Services does not require you to submit other Personal Information. 
+  ​
+Cookies and Tracking Pixels/Non-Personal Information
+To improve our Services, we track information provided to us by your browser or by our software application when you  use the Services, such as the referring URL,  the type of browser you use, the device from which you connected to the Service, the time and date of access, and other information that does not personally identify you. We track this information using cookies  and other similar means of tracking.  Cookies are small data files that our web servers send to your browser and which get saved on the hard drive of the computer that you are using to access the Site. If you do not want to allow cookies on your computer, you can either  automatically decline cookies (through your browser settings) or  decline or accept particular cookies from particular web sites.  Rejecting cookies, which you may do at any time, may make it impossible or difficult to use the Services.    If you  accept cookies from us and our service providers, you agree to let us and our service providers install cookies on your computer. To learn more about cookies, please visit http://allaboutcookies.org.  The tools used by Ro5 and its service providers collect and store information about your visits to our Site (for example, page visits, length of the visit,  link(s)  you used in the visit, and the address of the website from which you accessed Ro5’s site).  
+ 
+Children’s Privacy
+The Site and the Services are not directed to anyone under the age of 13. The Site does not knowingly collect or solicit information from anyone under the age of 13. If you are aware of information that you have given Ro5 from anyone under age 13 without parent or guardian consent, then please contact us at privacy@ro5.ai. If we determine we have information from someone under age 13, we will delete that information.   
+
+How Your Information May be Used
+By using our Services, you agree and acknowledge that the Product may collect, store, and use certain data related to your usage patterns, interactions, and other relevant activities ("User Activity Data"). The purpose of this data collection is to enhance user experience, improve product functionality, and for other business purposes as to maintain, secure, and improve our Site. We may use your Personal Information to improve our Products and Services, to keep contact information current, to improve our customer service, to reduce risk and prevent fraud, to provide you with a personalized experience on our Site and to communicate with you regarding new Service features and related products and services provided by our partners, events, and other information and notices we believe you may find useful. We will not sell or provide your information to third parties for their own direct marketing purposes.
+ 
+Your privacy is important to us. All User Activity Data collected is stored securely, and measures are taken to ensure its confidentiality and protection. By using the Product, you consent to the collection and use of your User Activity Data as described in this disclaimer. If you do not wish your User Activity Data to be collected, please refrain from using the Product.
+
+How Ro5 May Share Your Information​
+Service Providers
+We may rely on various third-party service providers and contractors to provide services that support the Site and our operations, including, without limitation, payment processing and other services of an administrative nature. Such third-parties may have access to your Personal Information for the purpose of performing the service for which they have been engaged.
+​
+Compliance with Laws and Law Enforcement
+Ro5 Inc. cooperates with government and law enforcement officials and private parties to enforce and comply with the law. We may disclose Personal Information and other user information when we have reason to believe that disclosing this information is necessary to comply with the law or to identify people who may be harming others or the property of others.   
+In some cases, we may be required to disclose Personal Information when regulatory or legal processes so require.  
+​
+Vendors and Service Providers
+We use various third-party service providers, such as AWS and Google Analytics that assist us with the Site. We may keep logs of your activity as you use our Services, for example, which pages you visit, when you use our applications, or what calls are made to our API. By way of non-exclusive illustration, we may use third-party vendors to store and authenticate account credentials, store and analyze system logs, send email communications, and for hosting and storing information collected through our Site. We may need to share your information with these vendors and service providers to enable them to provide these services to us. These service providers and vendors are required to only use your information to provide their services.
+ 
+How We Protect Information
+We implement security measures designed to protect your information from unauthorized access. If our service uses a password for authentication, it is your responsibility to keep the password secure. If our service uses email-based authentication, it is your responsibility to secure access to your email account.   We have other means of protecting information, but no information protection system is guaranteed safe.   Our protective measures do not guarantee that your information will not be accessed, disclosed, altered or destroyed by breach of safety measures.  By using our Service, you acknowledge that you understand and agree to assume these risks.
+​
+Links and Third Party Applications
+On our Site, we may provide links to websites or applications maintained by third parties, which we believe you may find useful. We are not responsible for the privacy practices of these other websites or applications.  You should review the privacy policies of each of those other websites or applications before using such websites and applications because they may differ. If you click on these third-party links, these other websites or applications may place their own cookies or other files on your computer, collect data, or solicit Personal Information from you.  We make no representation with regard to the policies or business practices of any websites or applications to which you connect through a link from this Site, and are not responsible for any material contained on, or any transactions that occur between you and any such website or application.
+​
+Location
+Ro5 Inc. is a United States based company and therefore we must abide by the laws and regulations of the United States as well as the other countries where we operate. By providing Personal Information and other information to this Site, you understand and consent to the collection, use, processing and transfer of such information to the United States and other countries or territories, which may not offer the same level of data protection as the country where you reside, in accordance with the terms of this Privacy Policy.
+​
+Privacy Policy Changes
+This Privacy Policy may be updated periodically. We will notify you of any material changes to this Privacy Policy by posting the revised policy on the Site. You should review this page to ensure that you know about our most current Privacy Policy. Any changes to our Privacy Policy will become effective when we post those changes to our Site. Use of the Site following such changes means you accept the revised Privacy Policy. You will be able to determine when this Privacy Policy was last revised by checking the "Last Updated" information that appears at the top of this page.
+
+If you have questions or concerns, please contact us at privacy@ro5.ai 
