@@ -20,10 +20,10 @@ First login to hydrascreen by providing your email and your organization.
 ```python
 from hydrascreen import login
 
-predictor = login(
+login(
     email='user@email.com', 
     organization='User Org'
-    )
+    ) # open your email to get token for following steps
 ```
 
 ### Getting predictions
@@ -37,7 +37,9 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 
 ```python
 from pathlib import Path
+from hydrascreen.predictor import HydraScreen
 
+predictor = HydraScreen("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwuY29tIiwib3JnIjoiTXkgT3JnIiwiZXhwIjoxNjk1NDYyMzU3fQ.Wwm6TBud41FnLc_2XZMa-ws_j7BjKY3fCwBzRKzaVvc") # replace with token received from email
 results = predictor.predict_for_protein(
             protein_file=Path('/path/to/protein.pdb'), 
             ligand_files=[
