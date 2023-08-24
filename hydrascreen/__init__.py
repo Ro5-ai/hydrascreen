@@ -23,7 +23,7 @@ def login(email: str, organization: str):
     )
 
     if response.status_code != 200:
-        raise Exception(f"Unable to verify email.Detail: detail {response}")
+        raise Exception(f"Unable to verify email. Detail: {response}")
     print(
         f"Sent verification email to {email}. Please check your email and use token provided to instantiate Hydrascreen class."
     )

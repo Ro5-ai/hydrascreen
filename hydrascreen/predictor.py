@@ -1,3 +1,4 @@
+import base64
 from pathlib import Path
 from typing import List
 from hydrascreen.api import inference, upload_pdb, upload_sdf
@@ -17,9 +18,9 @@ class HydraScreen:
         Initializes a new instance of the HydraScreen class.
 
         Args:
-            token (str): jwt token provided for usage of the api
+            token (str): base64 encoded jwt token provided for usage of the api
         """
-        self.token = token
+        self.token = base64.b64decode(token).decode("utf-8")
 
     @staticmethod
     def _split_inference_results(results: pd.DataFrame) -> InferenceResults:
