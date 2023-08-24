@@ -1,28 +1,20 @@
-from dataclasses import dataclass
 from io import BufferedReader, StringIO
 import pandas as pd
 import requests
 from typing import Dict, List
 
-API_URL = "https://hydrascreen-api.ro5.ai/v1"
+API_URL = "https://hydrascreen-api.ro5.ai/v2"
 
 
 class APIError(Exception):
     pass
 
 
-@dataclass
-class APICredentials:
-    email: str
-    organization: str
-
-
-def inference(credentials: APICredentials, inference_pairs: List[Dict[str, str]]) -> pd.DataFrame:
+def inference(inference_pairs: List[Dict[str, str]], token: str) -> pd.DataFrame:
     """
     Sends a POST request to the API to retrieve predictions based on the provided inference pairs.
 
     Args:
-        credentials (APICredentials): The API credentials object.
         inference_pairs (List[Dict[str, str]]): A list of dictionaries representing inference pairs.
         Format of inference pairs:
         [
@@ -31,6 +23,7 @@ def inference(credentials: APICredentials, inference_pairs: List[Dict[str, str]]
                 "docked_ligand": "s3://bucket/path/to/docked_ligand.sdf"
             }
         ]
+        token (str): jwt token provided for usage of the api
 
     Returns:
         pd.DataFrame: A DataFrame containing the predictions retrieved from the API.
@@ -38,13 +31,11 @@ def inference(credentials: APICredentials, inference_pairs: List[Dict[str, str]]
     Raises:
         APIError: If the response status code is not 200, indicating failure in retrieving predictions.
     """
-    headers = {"accept": "text/csv"}
+    headers = {"accept": "text/csv", "Authorization": f"Bearer {token}"}
     response = requests.post(
         url=f"{API_URL}/invocation",
         headers=headers,
         json={
-            "email": credentials.email,
-            "organization": credentials.organization,
             "inference_pairs": inference_pairs,
         },
     )
@@ -59,13 +50,13 @@ def inference(credentials: APICredentials, inference_pairs: List[Dict[str, str]]
     return pd.read_csv(csv_response)
 
 
-def upload_pdb(credentials: APICredentials, pdb_file: BufferedReader) -> str:
+def upload_pdb(pdb_file: BufferedReader, token: str) -> str:
     """
     Uploads a PDB file to the API for inference.
 
     Args:
-        credentials (APICredentials): The API credentials object.
         pdb_file (BufferedReader): A buffered reader object representing the PDB file to upload.
+        token (str): jwt token provided for usage of the api
 
     Returns:
         str: The S3 key of the uploaded PDB file.
@@ -73,9 +64,10 @@ def upload_pdb(credentials: APICredentials, pdb_file: BufferedReader) -> str:
     Raises:
         APIError: If the response status code is not 200, indicating failure in uploading the PDB file.
     """
-    query_params = {"email": credentials.email}
     files = {"file": pdb_file}
-    response = requests.post(url=f"{API_URL}/upload-pdb", params=query_params, files=files)
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.post(url=f"{API_URL}/upload-pdb", headers=headers, files=files)
 
     response_json = response.json()
 
@@ -85,14 +77,14 @@ def upload_pdb(credentials: APICredentials, pdb_file: BufferedReader) -> str:
     return response_json["s3_key"]
 
 
-def upload_sdf(credentials: APICredentials, pdb_s3_path: str, sdf_file: BufferedReader) -> str:
+def upload_sdf(pdb_s3_path: str, sdf_file: BufferedReader, token: str) -> str:
     """
     Uploads an SDF file to the API using the provided associated PDB S3 path.
 
     Args:
-        credentials (APICredentials): The API credentials object.
         pdb_s3_path (str): The S3 path of the associated PDB file.
         sdf_file (BufferedReader): A buffered reader object representing the SDF file to upload.
+        token (str): jwt token provided for usage of the api
 
     Returns:
         str: The S3 key of the uploaded SDF file.
@@ -100,9 +92,12 @@ def upload_sdf(credentials: APICredentials, pdb_s3_path: str, sdf_file: Buffered
     Raises:
         APIError: If the response status code is not 200, indicating failure in uploading the SDF file.
     """
-    query_params = {"email": credentials.email, "pdb_s3_path": pdb_s3_path}
+    query_params = {"pdb_s3_path": pdb_s3_path}
     files = {"file": sdf_file}
-    response = requests.post(url=f"{API_URL}/upload-sdf", params=query_params, files=files)
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.post(
+        url=f"{API_URL}/upload-sdf", headers=headers, params=query_params, files=files
+    )
 
     response_json = response.json()
 

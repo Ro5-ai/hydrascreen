@@ -1,20 +1,29 @@
-from hydrascreen.api import APICredentials
-from hydrascreen.predictor import HydraScreen
+import requests
+
+from hydrascreen.api import API_URL
 
 __version__ = "0.0.3"
 
 
-def login(email: str, organization: str) -> HydraScreen:
+def login(email: str, organization: str):
     """
     Logs in and creates a new instance of the HydraScreen class with the provided email and organization.
 
     Args:
         email (str): The email of the user.
         organization (str): The organization the user belongs to.
-
-    Returns:
-        HydraScreen: A new instance of the HydraScreen class.
-
     """
-    api_credentials = APICredentials(email=email, organization=organization)
-    return HydraScreen(api_credentials=api_credentials)
+    response = requests.post(
+        url=f"{API_URL}/email/verify",
+        headers={"Content-Type": "application/json"},
+        json={
+            email: email,
+            organization: organization,
+        },
+    )
+
+    if response.status_code != 200:
+        raise Exception(f"Unable to verify email.Detail: detail {response}")
+    print(
+        f"Sent verification email to {email}. Please check your email and use token provided to instantiate Hydrascreen class."
+    )

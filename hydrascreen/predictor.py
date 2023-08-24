@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import List
-from hydrascreen.api import APICredentials, inference, upload_pdb, upload_sdf
+from hydrascreen.api import inference, upload_pdb, upload_sdf
 import pandas as pd
 from dataclasses import dataclass
 
@@ -12,14 +12,14 @@ class InferenceResults:
 
 
 class HydraScreen:
-    def __init__(self, api_credentials: APICredentials) -> None:
+    def __init__(self, token: str) -> None:
         """
         Initializes a new instance of the HydraScreen class.
 
         Args:
-            api_credentials (APICredentials): The API credentials object.
+            token (str): jwt token provided for usage of the api
         """
-        self.api_credentials = api_credentials
+        self.token = token
 
     @staticmethod
     def _split_inference_results(results: pd.DataFrame) -> InferenceResults:
@@ -59,15 +59,15 @@ class HydraScreen:
         """
 
         with open(protein_file, "rb") as f:
-            pdb_s3_path = upload_pdb(credentials=self.api_credentials, pdb_file=f)
+            pdb_s3_path = upload_pdb(pdb_file=f, token=self.token)
 
         ligand_s3_paths = []
         for ligand_file in ligand_files:
             with open(ligand_file, "rb") as f:
                 ligand_s3_path = upload_sdf(
-                    credentials=self.api_credentials,
                     pdb_s3_path=pdb_s3_path,
                     sdf_file=f,
+                    token=self.token,
                 )
             ligand_s3_paths.append(ligand_s3_path)
 
@@ -76,6 +76,6 @@ class HydraScreen:
             for ligand_s3_path in ligand_s3_paths
         ]
 
-        results = inference(credentials=self.api_credentials, inference_pairs=inference_pairs)
+        results = inference(inference_pairs=inference_pairs, token=self.token)
 
         return self._split_inference_results(results)

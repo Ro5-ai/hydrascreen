@@ -1,5 +1,4 @@
 from unittest.mock import patch
-from hydrascreen.api import APICredentials
 from hydrascreen.predictor import HydraScreen
 
 
@@ -10,10 +9,9 @@ def test_predict_for_protein(
     upload_pdb,
     upload_sdf,
     inference,
-    mock_credentials: APICredentials,
     tmp_path,
 ):
-    hydrascreen_predictor = HydraScreen(api_credentials=mock_credentials)
+    hydrascreen_predictor = HydraScreen(token="test_token")
     mock_protein_file = tmp_path / "protein.pdb"
     mock_ligand_file1 = tmp_path / "docked_ligand1.sdf"
     mock_ligand_file2 = tmp_path / "docked_ligand2.sdf"
@@ -42,6 +40,4 @@ def test_predict_for_protein(
 
     upload_pdb.assert_called_once()
     assert upload_sdf.call_count == 2
-    inference.assert_called_once_with(
-        credentials=mock_credentials, inference_pairs=mock_inference_pairs
-    )
+    inference.assert_called_once_with(inference_pairs=mock_inference_pairs, token="test_token")
