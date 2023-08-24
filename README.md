@@ -39,7 +39,7 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 from pathlib import Path
 from hydrascreen.predictor import HydraScreen
 
-predictor = HydraScreen("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZW1haWwuY29tIiwib3JnIjoiTXkgT3JnIiwiZXhwIjoxNjk1NDYyMzU3fQ.Wwm6TBud41FnLc_2XZMa-ws_j7BjKY3fCwBzRKzaVvc") # replace with token received from email
+predictor = HydraScreen("ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxiV0ZwYkNJNkluUmxjM1JBWlcxaGFXd3VZMjl0SWl3aWIzSm5Jam9pVFhrZ1QzSm5JaXdpWlhod0lqb3hOamsxTkRZeU16VTNmUS5Xd202VEJ1ZDQxRm5MY18yWFpNYS13c19qN0JqS1kzZkN3QnpSS3phVnZj") # replace with token received from email
 results = predictor.predict_for_protein(
             protein_file=Path('/path/to/protein.pdb'), 
             ligand_files=[
