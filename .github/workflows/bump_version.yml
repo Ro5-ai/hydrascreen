@@ -1,0 +1,73 @@
+name: Update package version
+
+on:
+  # workflow executes only manually
+  workflow_dispatch:
+
+    inputs:
+      version_part_string:
+        description: 'Version part to increase'
+        required: true
+        type: choice
+        default: 'patch'
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+
+  tests:
+    uses: ./.github/workflows/run_tests.yml
+
+  upgrade_package_version:
+
+    # tests workflow needs to execute successfully
+    needs: [tests]
+
+    permissions:
+      id-token: write
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout latest commit
+        uses: actions/checkout@v3
+        with:
+          token: ${{secrets.ACTIONS_TOKEN}}
+
+      - name: Set up python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip"
+
+      - name: Set up GitHub Actions github account
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Bump the package version
+        run: |
+          pip install bump2version==1.0.1
+          bump2version $VERSION_PART_STRING
+        env:
+          VERSION_PART_STRING: ${{ github.event.inputs.version_part_string }}
+
+      - name: Build python package
+        run: |
+          pip install build==0.10.0
+          python -m build --wheel
+
+      - name: Upload package to PyPI
+        run: |
+          pip install twine==4.0.2
+          twine upload $(find dist/ -name "hydrascreen-*.whl") -u __token__ -p ${{secrets.PYPI_TOKEN}}
+
+      # push to github new version
+      - name: Push new version
+        run: |
+          git push
+          git push --tags
