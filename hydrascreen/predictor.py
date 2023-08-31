@@ -25,7 +25,8 @@ class HydraScreen:
     @staticmethod
     def _split_inference_results(results: pd.DataFrame) -> InferenceResults:
         """
-        Splits the inference results to produce 2 dataframes, one with aggregated ligand affinity scores and one with pose confidence scores and pose affinity predictions.
+        Splits the inference results to produce 2 dataframes, one with aggregated ligand affinity scores and
+        one with pose confidence scores and pose affinity predictions.
 
         Args:
             results (pd.DataFrame): Results from the inference API call.
@@ -53,7 +54,9 @@ class HydraScreen:
             protein_file (Path): The file path of the protein PDB file.
             The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
             ligand_files (List[Path]): A list of file paths for the docked SDF ligand files.
-            Each .sdf should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present.
+            Each .sdf should contain only one chemical compound, but may contain multiple poses thereof.
+            The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking).
+            Only organic compounds are allowed at present.
 
         Returns:
             results (InferenceResults): Two DataFrames under ligand_affinty and pose_predictions. Ligand affinity shows the aggregated affinity scores
