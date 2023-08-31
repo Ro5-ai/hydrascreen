@@ -33,10 +33,14 @@ class HydraScreen:
             results (InferenceResults): Two DataFrames under ligand_affinty and pose_predictions. Ligand affinity shows the aggregated affinity scores
             and pose predictions shows the pose confidence and pose affinity predictions.
         """
-        ligand_affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose_confidence", "pose_affinity"], axis=1)
+        ligand_affinity = results[results["pose_id"].isna()].drop(
+            ["pose_id", "pose_confidence", "pose_affinity"], axis=1
+        )
 
         pose_predictions = (
-            results[results["ligand_affinity"].isna()].drop(["ligand_affinity"], axis=1).astype({"pose_id": int})
+            results[results["ligand_affinity"].isna()]
+            .drop(["ligand_affinity"], axis=1)
+            .astype({"pose_id": int})
         )
 
         return InferenceResults(ligand_affinity=ligand_affinity, pose_predictions=pose_predictions)
@@ -46,7 +50,7 @@ class HydraScreen:
         Performs predictions for a given protein and a list of docked ligand files.
 
         Args:
-            protein_file (Path): The file path of the protein PDB file. 
+            protein_file (Path): The file path of the protein PDB file.
             The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
             ligand_files (List[Path]): A list of file paths for the docked SDF ligand files.
             Each .sdf should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present.
