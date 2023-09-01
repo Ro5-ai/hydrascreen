@@ -2,7 +2,7 @@ import requests
 
 from hydrascreen.api import API_URL
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 def login(email: str, organization: str):
