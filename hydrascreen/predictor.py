@@ -8,8 +8,8 @@ from dataclasses import dataclass
 
 @dataclass
 class InferenceResults:
-    affinity: pd.DataFrame
-    pose: pd.DataFrame
+    ligand_affinity: pd.DataFrame
+    pose_predictions: pd.DataFrame
 
 
 class HydraScreen:
@@ -25,35 +25,42 @@ class HydraScreen:
     @staticmethod
     def _split_inference_results(results: pd.DataFrame) -> InferenceResults:
         """
-        Splits the inference results to produce 2 dataframes, one with aggregated affinity scores and one with pose scores.
+        Splits the inference results to produce 2 dataframes, one with aggregated ligand affinity scores and
+        one with pose confidence scores and pose affinity predictions.
 
         Args:
             results (pd.DataFrame): Results from the inference API call.
         Returns:
-            results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
-            and pose shows the pose scores.
+            results (InferenceResults): Two DataFrames under ligand_affinty and pose_predictions. Ligand affinity shows the aggregated affinity scores
+            and pose predictions shows the pose confidence and pose affinity predictions.
         """
-        affinity = results[results["pose_id"].isna()].drop(["pose_id", "pose_confidence"], axis=1)
-
-        pose = (
-            results[results["affinity"].isna()].drop(["affinity"], axis=1).astype({"pose_id": int})
+        ligand_affinity = results[results["pose_id"].isna()].drop(
+            ["pose_id", "pose_confidence", "pose_affinity"], axis=1
         )
 
-        return InferenceResults(affinity=affinity, pose=pose)
+        pose_predictions = (
+            results[results["ligand_affinity"].isna()]
+            .drop(["ligand_affinity"], axis=1)
+            .astype({"pose_id": int})
+        )
+
+        return InferenceResults(ligand_affinity=ligand_affinity, pose_predictions=pose_predictions)
 
     def predict_for_protein(self, protein_file: Path, ligand_files: List[Path]) -> InferenceResults:
         """
         Performs predictions for a given protein and a list of docked ligand files.
 
         Args:
-            protein_file (Path): The file path of the protein PDB file. PDB file needs to include explicit hydrogens and charges,
-            and to be void of waters, metal ions, and salts.
+            protein_file (Path): The file path of the protein PDB file.
+            The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
             ligand_files (List[Path]): A list of file paths for the docked SDF ligand files.
-            Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
+            Each .sdf should contain only one chemical compound, but may contain multiple poses thereof.
+            The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking).
+            Only organic compounds are allowed at present.
 
         Returns:
-            results (InferenceResults): Two DataFrames under affinity and pose. Affinity shows the aggregated affinity scores
-            and pose shows the pose scores.
+            results (InferenceResults): Two DataFrames under ligand_affinty and pose_predictions. Ligand affinity shows the aggregated affinity scores
+            and pose predictions shows the pose confidence and pose affinity predictions.
 
         Raises:
             FileUploadError: If there is an error in uploading a file.

@@ -30,9 +30,10 @@ login(
 
 Call the `predict_for_protein` function to get predictions for your docked protein-ligand pairs.
 
-`protein_file` needs to be a `Path` object for a PDB file. Protein .pdb file needs to include explicit hydrogens and charges, and to be void of waters, metal ions, and salts.
+`protein_file` needs to be a `Path` object for a PDB file. The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
 
-`ligand_files` needs to be a list of `Path` objects for docked SDF files. Ligand files must contain a single molecule per file with one or more docked poses, with all hydrogens and charges.
+`ligand_files` needs to be a list of `Path` objects for docked SDF files. Each .sdf should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present.
+​
 
 
 ```python
@@ -50,8 +51,8 @@ results = predictor.predict_for_protein(
 ```
 
 The output will be a `results` dataclass with 2 entries which are `pandas DataFrames` for your protein-ligand pair predictions:
-- **results.affinity**: aggregated affinity scores of each protein-ligand complex
-- **results.pose**: pose scores for each pose separately
+- **results.ligand_affinity**: aggregated affinity scores of each protein-ligand complex
+- **results.pose_predictions**: pose confidence scores and pose affinity predictions for each pose separately
 
 If you want to run multiple proteins with their ligands you can use the code as follows:
 
@@ -75,12 +76,12 @@ input_pairs = [
     }
 ]
 
-affinities = []
-poses = []
+ligand_affinities = []
+poses_predictions = []
 for input_pair in input_pairs:
     results = predictor.predict_for_protein(**input_pair)
-    affinities.append(results.affinity)
-    poses.append(results.pose)
+    ligand_affinities.append(results.ligand_affinity)
+    poses_predictions.append(results.pose_predictions)
 ```
 
 The output will be 2 lists of `pandas DataFrames` with the prediction results for your protein-ligand pairs.
@@ -89,30 +90,31 @@ The output will be 2 lists of `pandas DataFrames` with the prediction results fo
 
 Below is an example of the resulting affinity and pose DaraFrames for a protein and 2 docked ligands, with 2 and 3 docked poses respectively.
 
-#### Affinity
+#### Ligand Affinity
 Columns:
  - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
  - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
- - **affinity**: Predicted affinity of protein-ligand pair overall, expressed in pKi units.
+ - **ligand_affinity**: Overall ligand affinity, expressed in pKi units, is obtained from the aggregation of the predicted pose affinities, weighted according to the Boltzmann distribution of the pose confidence score
 ```csv
-pdb_id,  ligand_id,                affinity,           
-protein, protein_docked_ligand_0,  0.84967568666
-protein, protein_docked_ligand_1,  0.8498707
+pdb_id,  ligand_id,                ligand_affinity,           
+protein, protein_docked_ligand_0,  8.496
+protein, protein_docked_ligand_1,  8.498
 ```
 
-#### Pose
+#### Pose Predictions
 Columns:
  - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
  - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
  - **pose_id**: Sequential pose number based on the order of the docked ligand poses in the SDF file.
- - **pose_confidence**: Pose confidence, ranging from low (0) to high (1), indicating the model's confidence that the pose could be the true, protein-ligand co-crystal structure. Note that this is solely based on the model's prediction and not a direct comparison with an existing co-crystal structure.
+ - **pose_confidence**: Pose confidence, ranging from low (0) to high (1), indicates the model's confidence that the pose could be the true, protein-ligand co-crystal structure. Note that this is solely based on the model's prediction and not a direct comparison with an existing co-crystal structure.
+ - **pose_affinity**: Predicted affinity of the protein-pose pair, expressed in pKi units.
 ```csv
-pdb_id,  ligand_id,             pose_id,  pose_confidence
-protein, protein_docked_ligand_0,  0, 0.9360706533333333
-protein, protein_docked_ligand_0,  1, 0.9487579333333334
-protein, protein_docked_ligand_1,  0, 0.8837728666666665
-protein, protein_docked_ligand_1,  1, 0.9275542666666666
-protein, protein_docked_ligand_1,  2, 0.8115468833333334
+pdb_id,  ligand_id,             pose_id,  pose_confidence, pose_affinity
+protein, protein_docked_ligand_0,  0, 0.9360706533333333, 7.694
+protein, protein_docked_ligand_0,  1, 0.9487579333333334, 7.691
+protein, protein_docked_ligand_1,  0, 0.8837728666666665, 7.248
+protein, protein_docked_ligand_1,  1, 0.9275542666666666, 3.356
+protein, protein_docked_ligand_1,  2, 0.8115468833333334, 7.233
 ```
 
 ## Development
