@@ -32,8 +32,8 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 
 `protein_file` needs to be a `Path` object for a PDB file. The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
 
-`ligand_files` needs to be a list of `Path` objects for docked SDF files. Each .sdf should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present.
-​
+`ligand_files` needs to be a list of `Path` objects for docked SDF or PDB files. Each file should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present. Ligands in .pdb format should include CONECT records.
+​​
 
 
 ```python
@@ -93,7 +93,7 @@ Below is an example of the resulting affinity and pose DaraFrames for a protein 
 #### Ligand Affinity
 Columns:
  - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
- - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
+ - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand file name).
  - **ligand_affinity**: Overall ligand affinity, expressed in pKi units, is obtained from the aggregation of the predicted pose affinities, weighted according to the Boltzmann distribution of the pose confidence score
 ```csv
 pdb_id,  ligand_id,                ligand_affinity,           
@@ -104,8 +104,8 @@ protein, protein_docked_ligand_1,  8.498
 #### Pose Predictions
 Columns:
  - **pdb_id**: Name of the protein the ligands are docked to (provided protein PDB file name).
- - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand SDF file name).
- - **pose_id**: Sequential pose number based on the order of the docked ligand poses in the SDF file.
+ - **ligand_id**: Name of the ligand docked to the pdb_id protein (provided ligand file name).
+ - **pose_id**: Sequential pose number based on the order of the docked ligand poses in the ligand file.
  - **pose_confidence**: Pose confidence, ranging from low (0) to high (1), indicates the model's confidence that the pose could be the true, protein-ligand co-crystal structure. Note that this is solely based on the model's prediction and not a direct comparison with an existing co-crystal structure.
  - **pose_affinity**: Predicted affinity of the protein-pose pair, expressed in pKi units.
 ```csv
