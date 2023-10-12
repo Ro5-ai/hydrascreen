@@ -1,7 +1,7 @@
 [![Tests](https://github.com/Ro5-ai/hydrascreen/actions/workflows/run_tests.yml/badge.svg)](https://github.com/Ro5-ai/hydrascreen/actions/workflows/run_tests.yml)
 # Hydrascreen
 
-This codebase provides functionality for making predictions using the HydraScreen API. It allows users to upload protein and ligand files, perform predictions, and retrieve the predicted affinity and pose confidence for each prediction. The GUI tool with the same functionality can be found here: [HydraScreen GUI](https://hydrascreen.ro5.ai/).
+This codebase provides functionality for making predictions using the HydraScreen API. It allows users to upload protein and ligand files, perform predictions, and retrieve the predicted affinity and pose confidence for each prediction. Compared to traditional methods like docking, HydraScreen demonstrates increased accuracy through public benchmarks and prospective validation studies. More detailed information about the model and its performance is available in our [publication](https://doi.org/10.26434/chemrxiv-2023-gwm1s-v2). The GUI tool with the same functionality and the download link to the RD-2020, the re-docked dataset used in the publication can be found here: [HydraScreen GUI](https://hydrascreen.ro5.ai/).
 
 
 ## Installation
