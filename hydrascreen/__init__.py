@@ -17,8 +17,8 @@ def login(email: str, organization: str):
         url=f"{API_URL}/email/verify",
         headers={"Content-Type": "application/json"},
         json={
-            email: email,
-            organization: organization,
+            "email": email,
+            "organization": organization,
         },
     )
 
