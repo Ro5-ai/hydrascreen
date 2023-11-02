@@ -59,7 +59,7 @@ jobs:
       - name: Build python package
         run: |
           pip install build==0.10.0
-          python -m build --wheel
+          python -m build --wheel --sdist
 
       - name: Upload package to PyPI
         run: |
