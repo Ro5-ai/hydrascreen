@@ -32,7 +32,7 @@ Call the `predict_for_protein` function to get predictions for your docked prote
 
 `protein_file` needs to be a `Path` object for a PDB file. The protein .pdb file should only contain amino acids. Water, ions, and other cofactors are not presently allowed.
 
-`ligand_files` needs to be a list of `Path` objects for docked SDF or PDB files. Each file should contain only one chemical compound, but may contain multiple poses thereof. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present. Ligands in .pdb format should include CONECT records.
+`ligand_files` needs to be a list of `Path` objects for docked SDF or PDB or MOL2 files. Each file should contain only one chemical compound, but may contain multiple poses thereof, with a maximum of 200 poses overall allowed. The poses need to include all hydrogens and be in the proper protonation state (i.e. as used for docking). Only organic compounds are allowed at present. Ligands in .pdb format should include CONECT records.
 ​​
 
 
