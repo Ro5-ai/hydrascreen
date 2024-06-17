@@ -19,7 +19,7 @@ NORMALIZER = {
     "docking": {
         "mean": -6.5,
         "std": 2.5,
-    }
+    },
 }
 
 
@@ -34,11 +34,11 @@ class MolgridModel(pl.LightningModule):
     """
 
     def __init__(
-            self,
-            model: nn.Module,
-            std_max: float = 3,
-            mirror_prob: float = 0.5,
-            normalizer=None,
+        self,
+        model: nn.Module,
+        std_max: float = 3,
+        mirror_prob: float = 0.5,
+        normalizer=None,
     ):
         super().__init__()
         if normalizer is None:
@@ -47,7 +47,6 @@ class MolgridModel(pl.LightningModule):
         self.std_max = std_max
         self.preprocessor = Preprocessor(norm_config=normalizer, mirror_prob=mirror_prob, gsm=0, std_max=2 * self.std_max)
         self.model = model
-
 
     def predict_step(self, batch, batch_idx):
         if isinstance(batch, dict):

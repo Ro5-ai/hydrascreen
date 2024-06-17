@@ -36,7 +36,7 @@ jobs:
 
       - name: Flake8 linting
         run: |
-          flake8 .
+          flake8 --config=setup.cfg .
 
       - name: Mypy test
         run: |

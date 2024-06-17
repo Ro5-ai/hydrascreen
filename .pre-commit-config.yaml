@@ -15,7 +15,11 @@ repos:
     rev: v1.4.1
     hooks:
     -   id: mypy
+        args: [--config-file=mypy.ini, .]
+        exclude: paper
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
     -   id: flake8
+        args: [--config=setup.cfg, .]
+        exclude: paper

@@ -55,7 +55,8 @@ def _setup_inference(types_file: Path, batch_size: int) -> DataLoader:
         rotate=False,
         translate=0.0,
         rec_typer=rec_typer,
-        lig_typer=lig_typer)
+        lig_typer=lig_typer,
+    )
     datamodule.setup("predict")
     dataloader = datamodule.dataloader()
     return dataloader
@@ -67,7 +68,7 @@ def _model_result_to_df(types_df: pd.DataFrame, outs: List[torch.Tensor]) -> pd.
     results = torch.cat(outs, dim=0)
     results = results[:num_ligands]
     results[:, 0] = torch.sigmoid(results[:, 0])
-    result_df = pd.DataFrame.from_records(results.cpu().numpy(), columns=["pose", 'pki', 'rmsd', 'dock_score'])
+    result_df = pd.DataFrame.from_records(results.cpu().numpy(), columns=["pose", "pki", "rmsd", "dock_score"])
     result_df["ligand_conformer_id"] = types_df["ligand_gninatype"].apply(lambda p: Path(p).stem)
     result_df.set_index("ligand_conformer_id", inplace=True)
     return result_df
@@ -93,21 +94,23 @@ def _merge_and_save_csv_in_dir(input_csv_dir: Path, output_dir: Path, filename_c
         pdb_results_df.to_csv(f"{output_dir / model_dir.name}.csv", index=False)
 
 
-def make_types_file(sdf_gninatypes: List[Union[str, Path]], pdb_gninatypes: Union[str, Path], out_file: Union[str, Path]):
+def make_types_file(
+    sdf_gninatypes: List[Union[str, Path]],
+    pdb_gninatypes: Union[str, Path],
+    out_file: Union[str, Path],
+):
     tmp = [0] * len(sdf_gninatypes)
-    types_df = pd.DataFrame(dict(
-        pose=tmp,
-        affinity=tmp,
-        rmsd=tmp,
-        docking=tmp,
-        protein_gninatype=[str(pdb_gninatypes)] * len(sdf_gninatypes),
-        ligand_gninatype=sdf_gninatypes))
-    types_df.to_csv(
-        out_file,
-        sep=' ',
-        index=False,
-        header=False
+    types_df = pd.DataFrame(
+        dict(
+            pose=tmp,
+            affinity=tmp,
+            rmsd=tmp,
+            docking=tmp,
+            protein_gninatype=[str(pdb_gninatypes)] * len(sdf_gninatypes),
+            ligand_gninatype=sdf_gninatypes,
+        )
     )
+    types_df.to_csv(out_file, sep=" ", index=False, header=False)
     return types_df
 
 
@@ -137,7 +140,7 @@ def copy_files(source_paths: pd.Series, dest_dir: Path):
         dest_path.write_bytes(source_path.read_bytes())
 
 
-class ModelInference():
+class ModelInference:
     def __init__(self, model_paths: List[Union[str, Path]]):
         model_checkpoint_paths = [Path(model_uri) for model_uri in model_paths]
         logger.info(f"Loading following models for inference: {model_checkpoint_paths}")
@@ -145,11 +148,8 @@ class ModelInference():
         for model_path in model_paths:
             checkpoint_model = CheckpointModel(
                 Path(model_path),
-                MolgridModel.load_from_checkpoint(
-                    checkpoint_path=str(model_path),
-                    device='cuda:0',
-                    strict=False
-                ).eval().cuda())
+                MolgridModel.load_from_checkpoint(checkpoint_path=str(model_path), device="cuda:0", strict=False).eval().cuda(),
+            )
             checkpoint_model.model.freeze()
             # Set up posprocessor WITHOUT mirroring for deterministic predictions
             checkpoint_model.model.preprocessor.mirror_dist = torch.distributions.Bernoulli(0.0)
@@ -167,12 +167,12 @@ class ModelInference():
         """
 
         logger.info(f"Running inference for {len(model_input)} protein-ligand pairs.")
-        batch_size = int(os.getenv('INFERENCE_BATCH_SIZE', 200))
+        batch_size = int(os.getenv("INFERENCE_BATCH_SIZE", 200))
 
         output_dir.mkdir(exist_ok=True, parents=True)
         work_dir = output_dir / str(time.time())
         logger.info(f"Storing temp gninatype and types files in {work_dir}")
-        gninatype_dir = Path(work_dir) / 'gninatypes'
+        gninatype_dir = Path(work_dir) / "gninatypes"
         gninatype_dir.mkdir()
         output_dir = work_dir / "output"
         output_dir.mkdir()
@@ -189,12 +189,16 @@ class ModelInference():
             out_types_file = work_dir / f"{pdb_id}.types"
 
             pdb_gnina_file = _pdb_to_gninatypes(pdb_path=pdb_path, gninatype_output_path=gninatype_dir)
-            ligand_gnina_files = _sdf_to_gninatypes(ligand_paths=list(ligand_dir.rglob(f"**/{pdb_id}*.sdf")), gninatype_output_path=gninatype_dir)
+            ligand_gnina_files = _sdf_to_gninatypes(
+                ligand_paths=list(ligand_dir.rglob(f"**/{pdb_id}*.sdf")),
+                gninatype_output_path=gninatype_dir,
+            )
 
             types_df = make_types_file(
                 sdf_gninatypes=ligand_gnina_files,
                 pdb_gninatypes=pdb_gnina_file,
-                out_file=out_types_file)
+                out_file=out_types_file,
+            )
 
             batch_size = min(len(types_df), batch_size)
             dataloader = _setup_inference(types_file=out_types_file, batch_size=batch_size)
@@ -204,7 +208,11 @@ class ModelInference():
             logger.info(f"Saving model predictions to {output_dir}")
             for model_checkpoint_path, model_result in all_model_results.items():
                 result_df = _model_result_to_df(types_df, model_result)
-                _store_results(result_df, model_output_dir=output_dir / model_checkpoint_path.stem, pdb_id=pdb_id)
+                _store_results(
+                    result_df,
+                    model_output_dir=output_dir / model_checkpoint_path.stem,
+                    pdb_id=pdb_id,
+                )
             logger.info(f"Finished inference for protein '{pdb_id}'.")
         logger.info(f"Will merge results: {datetime.datetime.now().isoformat()}")
 
@@ -221,7 +229,12 @@ if __name__ == "__main__":
     docked_ligands_dir = PAPER_ROOT / "example_input" / "ligands"
     proteins_dir = PAPER_ROOT / "example_input" / "pdbs"
 
-    model.predict(pd.DataFrame({
-        "protein": glob.glob(str(proteins_dir / "*.pdb")),
-        "docked_ligand": glob.glob(str(docked_ligands_dir / "*.sdf"))
-    }), output_dir=Path(f"run_{datetime.datetime.now()}"))
+    model.predict(
+        pd.DataFrame(
+            {
+                "protein": glob.glob(str(proteins_dir / "*.pdb")),
+                "docked_ligand": glob.glob(str(docked_ligands_dir / "*.sdf")),
+            }
+        ),
+        output_dir=Path(f"run_{datetime.datetime.now()}"),
+    )

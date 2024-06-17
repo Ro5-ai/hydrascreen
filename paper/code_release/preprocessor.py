@@ -14,7 +14,7 @@ class ActivitySmoother:
 
         # Reduce tail points
         is_too_small = z < -std_max
-        z[is_too_small] = - std_max
+        z[is_too_small] = -std_max
 
         is_too_large = z > std_max
         z[is_too_large] = std_max
@@ -31,7 +31,7 @@ class ActivitySmoother:
         return x
 
     def __call__(self, activity: torch.Tensor) -> torch.Tensor:
-        """ Smooth activity values according to Gaussian smoothing and outlier removal
+        """Smooth activity values according to Gaussian smoothing and outlier removal
 
         Args:
             activity (torch.Tensor): Shape [N]. Activity values to be smoothed
@@ -46,7 +46,7 @@ class ActivitySmoother:
 
 class Preprocessor(torch.nn.Module):
     def __init__(self, norm_config: dict, mirror_prob=0.5, gsm: float = 1 / 4, std_max: float = 5 / 2):
-        """ Preprocessor to manage data labelling during training
+        """Preprocessor to manage data labelling during training
         Args:
             norm_config (dict): Configuration of the statistics
             mirror_prob (float, optional): Probability of mirroring the voxels. Defaults to 0.5.
@@ -58,7 +58,7 @@ class Preprocessor(torch.nn.Module):
         self.mirror_prob = mirror_prob
         self.mirror_dist = torch.distributions.Bernoulli(mirror_prob)
         # Use effective GSM because smoother operates in Z space
-        effective_gsm = gsm / self.norm_config['affinity']['std']
+        effective_gsm = gsm / self.norm_config["affinity"]["std"]
         self.activity_smoother = ActivitySmoother(gsm=effective_gsm, std_max=std_max)
 
     def normalise(self, activity: torch.Tensor, rmsd: torch.Tensor, dock: torch.Tensor):
@@ -74,7 +74,7 @@ class Preprocessor(torch.nn.Module):
         # Normalise Activity. Only for non-zero values.
         activity = torch.abs(activity)
         is_active = activity > 0
-        activity = (activity - self.norm_config['affinity']['mean']) / self.norm_config['affinity']['std']
+        activity = (activity - self.norm_config["affinity"]["mean"]) / self.norm_config["affinity"]["std"]
 
         # Smoothing
         if self.activity_smoother is not None:
@@ -83,13 +83,13 @@ class Preprocessor(torch.nn.Module):
         activity[~is_active] = 0
 
         # Normalise RMSD & Zero out rmsd values that are above the threshold between [-1 and 1]
-        rmsd = (rmsd - self.norm_config['rmsd']['mean']) / self.norm_config['rmsd']['std']
+        rmsd = (rmsd - self.norm_config["rmsd"]["mean"]) / self.norm_config["rmsd"]["std"]
         rmsd[rmsd > 1] = 1
         rmsd[rmsd < -1] = -1
 
         # Normalise RMSD & Zero out dock scores above 0.
         is_dock = dock < 0
-        dock = (dock - self.norm_config['docking']['mean']) / self.norm_config['docking']['std']
+        dock = (dock - self.norm_config["docking"]["mean"]) / self.norm_config["docking"]["std"]
         dock[~is_dock] = 0
         return activity, rmsd, dock
 
@@ -103,9 +103,9 @@ class Preprocessor(torch.nn.Module):
         Returns:
             [tuple]: activty, rmsd, dock
         """
-        activity = activity * self.norm_config['affinity']['std'] + self.norm_config['affinity']['mean']
-        rmsd = rmsd * self.norm_config['rmsd']['std'] + self.norm_config['rmsd']['mean']
-        dock = dock * self.norm_config['docking']['std'] + self.norm_config['docking']['mean']
+        activity = activity * self.norm_config["affinity"]["std"] + self.norm_config["affinity"]["mean"]
+        rmsd = rmsd * self.norm_config["rmsd"]["std"] + self.norm_config["rmsd"]["mean"]
+        dock = dock * self.norm_config["docking"]["std"] + self.norm_config["docking"]["mean"]
         return activity, rmsd, dock
 
     def mirror_transform_voxels(self, voxels: torch.Tensor):
@@ -121,13 +121,10 @@ class Preprocessor(torch.nn.Module):
         assert shape[-1] == shape[-2] == shape[-3], "Can only mirror isomorphic voxels"
         surpluss = len(shape) - 3
         rotate_axes = self.mirror_dist.sample([3])
-        flip_dims = [
-            x.item() + surpluss for x in torch.where(rotate_axes == 1)[0]]
+        flip_dims = [x.item() + surpluss for x in torch.where(rotate_axes == 1)[0]]
         return voxels.flip(flip_dims)
 
     def forward(self, voxels, activity, rmsd, dock):
-        activity, rmsd, dock = self.normalise(activity=activity,
-                                              rmsd=rmsd,
-                                              dock=dock)
+        activity, rmsd, dock = self.normalise(activity=activity, rmsd=rmsd, dock=dock)
         voxels = self.mirror_transform_voxels(voxels=voxels)
         return voxels, activity, rmsd, dock

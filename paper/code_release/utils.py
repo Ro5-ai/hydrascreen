@@ -49,37 +49,39 @@ gninatypes = list(molgrid.GninaIndexTyper().get_type_names())
 """
 
 gninatype_to_atom_num = {
-    'Hydrogen': 1,
-    'PolarHydrogen': 1,
-    'AliphaticCarbonXSHydrophobe': 6,
-    'AliphaticCarbonXSNonHydrophobe': 6,
-    'AromaticCarbonXSHydrophobe': 6,
-    'AromaticCarbonXSNonHydrophobe': 6,
-    'Nitrogen': 7,
-    'NitrogenXSDonor': 7,
-    'NitrogenXSDonorAcceptor': 7,
-    'NitrogenXSAcceptor': 7,
-    'Oxygen': 8,
-    'OxygenXSDonor': 8,
-    'OxygenXSDonorAcceptor': 8,
-    'OxygenXSAcceptor': 8,
-    'Sulfur': 16,
-    'SulfurAcceptor': 16,
-    'Phosphorus': 15,
-    'Fluorine': 9,
-    'Chlorine': 17,
-    'Bromine': 35,
-    'Iodine': 53,
-    'Magnesium': 12,
-    'Manganese': 25,
-    'Zinc': 30,
-    'Calcium': 20,
-    'Iron': 26,
-    'Boron': 6,
-    'GenericMetal': 0}
+    "Hydrogen": 1,
+    "PolarHydrogen": 1,
+    "AliphaticCarbonXSHydrophobe": 6,
+    "AliphaticCarbonXSNonHydrophobe": 6,
+    "AromaticCarbonXSHydrophobe": 6,
+    "AromaticCarbonXSNonHydrophobe": 6,
+    "Nitrogen": 7,
+    "NitrogenXSDonor": 7,
+    "NitrogenXSDonorAcceptor": 7,
+    "NitrogenXSAcceptor": 7,
+    "Oxygen": 8,
+    "OxygenXSDonor": 8,
+    "OxygenXSDonorAcceptor": 8,
+    "OxygenXSAcceptor": 8,
+    "Sulfur": 16,
+    "SulfurAcceptor": 16,
+    "Phosphorus": 15,
+    "Fluorine": 9,
+    "Chlorine": 17,
+    "Bromine": 35,
+    "Iodine": 53,
+    "Magnesium": 12,
+    "Manganese": 25,
+    "Zinc": 30,
+    "Calcium": 20,
+    "Iron": 26,
+    "Boron": 6,
+    "GenericMetal": 0,
+}
 
 warn(
-    "Hardcoding atom types. Please only use this if the ligand-based grid is suppossed to operate at the element level. This will fail if we have i.e. aromatic and aliphatic carbons on different channels.")
+    "Hardcoding atom types. Please only use this if the ligand-based grid is suppossed to operate at the element level. This will fail if we have i.e. aromatic and aliphatic carbons on different channels."
+)
 atom_num_to_gninatype_name = {
     0: "GenericMetal",
     1: "Hydrogen",
@@ -103,21 +105,17 @@ atom_num_to_gninatype_name = {
 
 class GeneralTyper(molgrid.FileMappedGninaTyper):
     def __init__(self, type_file: str):
-        types_path = resource_filename(__name__, f'{type_file}.typedef')
+        types_path = resource_filename(__name__, f"{type_file}.typedef")
         super(GeneralTyper, self).__init__(types_path)
 
 
-
-atom_num_to_gninatype_index = {
-    atom_num: gninatypes.index(gninatype)
-    for atom_num, gninatype in atom_num_to_gninatype_name.items()
-}
+atom_num_to_gninatype_index = {atom_num: gninatypes.index(gninatype) for atom_num, gninatype in atom_num_to_gninatype_name.items()}
 
 
 @contextmanager
 def _suppress_stdout_stderr():
     """A context manager that redirects stdout and stderr to devnull"""
-    with open(devnull, 'w') as fnull:
+    with open(devnull, "w") as fnull:
         with redirect_stderr(fnull) as err, redirect_stdout(fnull) as out:
             yield (err, out)
 
@@ -156,7 +154,7 @@ def pdb_to_gninatype(pdb_file: Union[str, Path], output_dir: Union[str, Path]) -
     types_file = Path(output_dir) / f"{Path(pdb_file).stem}.types"
     gninatypes_file = Path(output_dir) / f"{Path(pdb_file).stem}.gninatypes"
 
-    with open(types_file, 'w') as f:
+    with open(types_file, "w") as f:
         f.write(str(pdb_file))
 
     atom_map = molgrid.GninaIndexTyper()
@@ -166,9 +164,9 @@ def pdb_to_gninatype(pdb_file: Union[str, Path], output_dir: Union[str, Path]) -
     coords = example.coord_sets[0].coords.tonumpy()
     types = example.coord_sets[0].type_index.tonumpy()
     types = np.int_(types)
-    with open(gninatypes_file, 'wb') as f:
+    with open(gninatypes_file, "wb") as f:
         for i in range(coords.shape[0]):
-            f.write(struct.pack('fffi', coords[i][0], coords[i][1], coords[i][2], types[i]))
+            f.write(struct.pack("fffi", coords[i][0], coords[i][1], coords[i][2], types[i]))
     os.remove(str(types_file))
     return gninatypes_file
 
@@ -185,34 +183,45 @@ def sdf_to_gninatypes(sdf_file: Union[str, Path], output_dir: Union[str, Path]) 
         with open(output_file_name, "wb") as f:
             for atom_coordinates in conformer:
                 if atom_coordinates.gninatype_index != -1:
-                    f.write(struct.pack('fffi', atom_coordinates.x, atom_coordinates.y, atom_coordinates.z, atom_coordinates.gninatype_index))
+                    f.write(
+                        struct.pack(
+                            "fffi",
+                            atom_coordinates.x,
+                            atom_coordinates.y,
+                            atom_coordinates.z,
+                            atom_coordinates.gninatype_index,
+                        )
+                    )
                 else:
-                    print(f'Skipping atom coordinate {atom_coordinates.atomic_num}')
+                    print(f"Skipping atom coordinate {atom_coordinates.atomic_num}")
         output_file_names.append(output_file_name)
     return output_file_names
 
 
-def make_types_file(sdf_gninatypes: List[Union[str, Path]], pdb_gninatypes: Union[str, Path], out_file: Union[str, Path]):
+def make_types_file(
+    sdf_gninatypes: List[Union[str, Path]],
+    pdb_gninatypes: Union[str, Path],
+    out_file: Union[str, Path],
+):
     tmp = [0] * len(sdf_gninatypes)
-    types_df = pd.DataFrame(dict(
-        pose=tmp,
-        affinity=tmp,
-        rmsd=tmp,
-        docking=tmp,
-        protein_gninatype=[str(pdb_gninatypes)] * len(sdf_gninatypes),
-        ligand_gninatype=sdf_gninatypes))
-    types_df.to_csv(
-        out_file,
-        sep=' ',
-        index=False,
-        header=False
+    types_df = pd.DataFrame(
+        dict(
+            pose=tmp,
+            affinity=tmp,
+            rmsd=tmp,
+            docking=tmp,
+            protein_gninatype=[str(pdb_gninatypes)] * len(sdf_gninatypes),
+            ligand_gninatype=sdf_gninatypes,
+        )
     )
+    types_df.to_csv(out_file, sep=" ", index=False, header=False)
     return types_df
-
 
 
 warn("We are adding Hydrogens using pybel. This might not be suitable in some conditions. Please revise this in the future.")
 warn("Also we are adding hydrogens but are not modelling the hydrogens in the protein... no need!")
+
+
 def sdf_to_xyz_atomic(sdf_file: Union[str, Path]) -> List[List[AtomCoordinates]]:
     """
     Returns:

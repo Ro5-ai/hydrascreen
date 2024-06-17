@@ -22,7 +22,6 @@ from molgrid import float3
 from molgrid import Grid1fCUDA, Grid4fCUDA, Transform, Grid1f, Grid4f
 
 
-
 def count_lines(file_name: Union[Path, str]) -> int:
     """Get number of lines in a file
 
@@ -40,19 +39,19 @@ class BaseMolgridDataset(IterableDataset):
     """Base-class for using Molgrid-accellerated voxelization and sampling."""
 
     def __init__(
-            self,
-            example_provider,
-            grid_maker,
-            batch_size: int,
-            num_channels: int,
-            n_iters: int,
-            use_radii: int,
-            rotate: bool,
-            translate: float,
-            lig_padding: float = 2.0,
-            device: str = 'cuda',
+        self,
+        example_provider,
+        grid_maker,
+        batch_size: int,
+        num_channels: int,
+        n_iters: int,
+        use_radii: int,
+        rotate: bool,
+        translate: float,
+        lig_padding: float = 2.0,
+        device: str = "cuda",
     ) -> None:
-        """ Base molgrid dataloader.
+        """Base molgrid dataloader.
 
         Args:
             example_provider (_type_): _description_
@@ -103,7 +102,6 @@ class BaseMolgridDataset(IterableDataset):
 
     @torch.no_grad()
     def __iter__(self):
-
         for i in range(self.n_iters):
             batch = self.ex_prov.next_batch(self.batch_size)
             # Extract label tensors
@@ -132,12 +130,9 @@ class BaseMolgridDataset(IterableDataset):
                     # print(f"No ligand here {i, bi}, omiting for now but please fix!")
                     missed_ids.append(bi)
                 else:
-
                     # Rotate then translate
                     if self.rotate:
-                        rtrans = Transform(
-                            center, random_translate=0.0, random_rotation=self.rotate
-                        )
+                        rtrans = Transform(center, random_translate=0.0, random_rotation=self.rotate)
                         rtrans.forward(coords, coords)
 
                     # Translate
@@ -146,12 +141,20 @@ class BaseMolgridDataset(IterableDataset):
                     origin_lig_coords = lig_coords - np.array(list(center))
                     origin_lig_coords /= self.gmaker.get_resolution()
 
-                    max_neg_xyz_trans = (origin_lig_coords.min(
-                        0) + self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution()) * self.gmaker.get_resolution()
-                    max_pos_xyz_trans = (self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution() - origin_lig_coords.max(
-                        0)) * self.gmaker.get_resolution()
-                    effective_max_neg_trans = -np.min(np.array([max_neg_xyz_trans, np.ones_like(max_neg_xyz_trans) * self.translate]), 0)
-                    effective_max_pos_trans = np.min(np.array([max_pos_xyz_trans, np.ones_like(max_pos_xyz_trans) * self.translate]), 0)
+                    max_neg_xyz_trans = (
+                        origin_lig_coords.min(0) + self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution()
+                    ) * self.gmaker.get_resolution()
+                    max_pos_xyz_trans = (
+                        self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution() - origin_lig_coords.max(0)
+                    ) * self.gmaker.get_resolution()
+                    effective_max_neg_trans = -np.min(
+                        np.array([max_neg_xyz_trans, np.ones_like(max_neg_xyz_trans) * self.translate]),
+                        0,
+                    )
+                    effective_max_pos_trans = np.min(
+                        np.array([max_pos_xyz_trans, np.ones_like(max_pos_xyz_trans) * self.translate]),
+                        0,
+                    )
                     # Uniform transformation
                     # sampled_trans = np.random.uniform(effective_max_neg_trans, effective_max_pos_trans, 3)
 
@@ -160,15 +163,13 @@ class BaseMolgridDataset(IterableDataset):
                     mean_trans = (effective_max_pos_trans + effective_max_neg_trans) / 2
                     sampled_trans = mean_trans + np.random.randn(3) * std_trans
                     # Translate Given the limits
-                    trans = Transform(
-                        center, random_translate=0.0, random_rotation=False
-                    )
+                    trans = Transform(center, random_translate=0.0, random_rotation=False)
                     trans.set_translation(float3(*sampled_trans))
                     trans.forward(coords, coords)
 
                 # TODO ligand jitter (just a bit?)
                 # TODO residue jitter (transform residue coordinates a bit)
-                if self.device == 'cpu':
+                if self.device == "cpu":
                     self.gmaker.forward(
                         center,
                         coords.coords.cpu(),
@@ -202,19 +203,19 @@ class BaseMolgridDataset(IterableDataset):
 
 class DataModule(pl.LightningDataModule):
     def __init__(
-            self,
-            types_file: str,
-            batch_size: int,
-            data_root: Optional[str] = None,
-            num_channels: int = 42,
-            rotate: bool = False,
-            translate: float = 0.0,
-            ligmolcache=None,
-            recmolcache=None,
-            rec_typer: Optional[molgrid.FileMappedGninaTyper] = None,
-            lig_typer: Optional[molgrid.FileMappedGninaTyper] = None,
-            num_workers: int = 0,
-            device: str = 'cuda',
+        self,
+        types_file: str,
+        batch_size: int,
+        data_root: Optional[str] = None,
+        num_channels: int = 42,
+        rotate: bool = False,
+        translate: float = 0.0,
+        ligmolcache=None,
+        recmolcache=None,
+        rec_typer: Optional[molgrid.FileMappedGninaTyper] = None,
+        lig_typer: Optional[molgrid.FileMappedGninaTyper] = None,
+        num_workers: int = 0,
+        device: str = "cuda",
     ):
         """Datamodule which wraps efficient molgrid-based balanced stratified sampling and voxelization on the CrossDocked2020 dataset
 
