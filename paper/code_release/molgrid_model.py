@@ -45,7 +45,9 @@ class MolgridModel(pl.LightningModule):
             normalizer = NORMALIZER
         self.normalizer = normalizer
         self.std_max = std_max
-        self.preprocessor = Preprocessor(norm_config=normalizer, mirror_prob=mirror_prob, gsm=0, std_max=2 * self.std_max)
+        self.preprocessor = Preprocessor(
+            norm_config=normalizer, mirror_prob=mirror_prob, gsm=0, std_max=2 * self.std_max
+        )
         self.model = model
 
     def predict_step(self, batch, batch_idx):

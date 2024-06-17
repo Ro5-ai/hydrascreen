@@ -132,7 +132,9 @@ class BaseMolgridDataset(IterableDataset):
                 else:
                     # Rotate then translate
                     if self.rotate:
-                        rtrans = Transform(center, random_translate=0.0, random_rotation=self.rotate)
+                        rtrans = Transform(
+                            center, random_translate=0.0, random_rotation=self.rotate
+                        )
                         rtrans.forward(coords, coords)
 
                     # Translate
@@ -142,17 +144,25 @@ class BaseMolgridDataset(IterableDataset):
                     origin_lig_coords /= self.gmaker.get_resolution()
 
                     max_neg_xyz_trans = (
-                        origin_lig_coords.min(0) + self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution()
+                        origin_lig_coords.min(0)
+                        + self.gmaker.get_dimension()
+                        - self.lig_padding / self.gmaker.get_resolution()
                     ) * self.gmaker.get_resolution()
                     max_pos_xyz_trans = (
-                        self.gmaker.get_dimension() - self.lig_padding / self.gmaker.get_resolution() - origin_lig_coords.max(0)
+                        self.gmaker.get_dimension()
+                        - self.lig_padding / self.gmaker.get_resolution()
+                        - origin_lig_coords.max(0)
                     ) * self.gmaker.get_resolution()
                     effective_max_neg_trans = -np.min(
-                        np.array([max_neg_xyz_trans, np.ones_like(max_neg_xyz_trans) * self.translate]),
+                        np.array(
+                            [max_neg_xyz_trans, np.ones_like(max_neg_xyz_trans) * self.translate]
+                        ),
                         0,
                     )
                     effective_max_pos_trans = np.min(
-                        np.array([max_pos_xyz_trans, np.ones_like(max_pos_xyz_trans) * self.translate]),
+                        np.array(
+                            [max_pos_xyz_trans, np.ones_like(max_pos_xyz_trans) * self.translate]
+                        ),
                         0,
                     )
                     # Uniform transformation
@@ -248,7 +258,9 @@ class DataModule(pl.LightningDataModule):
         super().__init__()
 
     def setup(self, stage: Optional[str] = None) -> None:
-        gmaker = GridMaker(resolution=0.5, dimension=24.0, gaussian_radius_multiple=0.5, radius_scale=0.8)
+        gmaker = GridMaker(
+            resolution=0.5, dimension=24.0, gaussian_radius_multiple=0.5, radius_scale=0.8
+        )
 
         # Set training datasets
         if self.data_root is not None:

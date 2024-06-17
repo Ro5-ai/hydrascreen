@@ -39,7 +39,9 @@ def _sdf_to_gninatypes(ligand_paths, gninatype_output_path: Path) -> List[str]:
         try:
             sdf_gnina_files += sdf_to_gninatypes(sdf_file, output_dir=gninatype_output_path)
         except Exception as e:
-            logger.exception(f"Couldn't process sdf file {sdf_file} and thus skipping it. Error:", e)
+            logger.exception(
+                f"Couldn't process sdf file {sdf_file} and thus skipping it. Error:", e
+            )
     return sdf_gnina_files
 
 
@@ -68,7 +70,9 @@ def _model_result_to_df(types_df: pd.DataFrame, outs: List[torch.Tensor]) -> pd.
     results = torch.cat(outs, dim=0)
     results = results[:num_ligands]
     results[:, 0] = torch.sigmoid(results[:, 0])
-    result_df = pd.DataFrame.from_records(results.cpu().numpy(), columns=["pose", "pki", "rmsd", "dock_score"])
+    result_df = pd.DataFrame.from_records(
+        results.cpu().numpy(), columns=["pose", "pki", "rmsd", "dock_score"]
+    )
     result_df["ligand_conformer_id"] = types_df["ligand_gninatype"].apply(lambda p: Path(p).stem)
     result_df.set_index("ligand_conformer_id", inplace=True)
     return result_df
@@ -90,7 +94,9 @@ def _get_data_from_csvs(output_dir, filename_column_to_add):
 
 def _merge_and_save_csv_in_dir(input_csv_dir: Path, output_dir: Path, filename_column_to_add: str):
     for model_dir in input_csv_dir.glob("*"):
-        pdb_results_df = _get_data_from_csvs(model_dir, filename_column_to_add=filename_column_to_add)
+        pdb_results_df = _get_data_from_csvs(
+            model_dir, filename_column_to_add=filename_column_to_add
+        )
         pdb_results_df.to_csv(f"{output_dir / model_dir.name}.csv", index=False)
 
 
@@ -120,7 +126,9 @@ class CheckpointModel:
     model: MolgridModel
 
 
-def run_inference(models: List[CheckpointModel], dataloader: DataLoader) -> Dict[Path, List[torch.Tensor]]:
+def run_inference(
+    models: List[CheckpointModel], dataloader: DataLoader
+) -> Dict[Path, List[torch.Tensor]]:
     # Feed input to the model -> Voxel size (BATCH_SIZE, N (usually 21), 49, 49, 49)
     outs = {}
     for i, batch in enumerate(dataloader):
@@ -148,7 +156,11 @@ class ModelInference:
         for model_path in model_paths:
             checkpoint_model = CheckpointModel(
                 Path(model_path),
-                MolgridModel.load_from_checkpoint(checkpoint_path=str(model_path), device="cuda:0", strict=False).eval().cuda(),
+                MolgridModel.load_from_checkpoint(
+                    checkpoint_path=str(model_path), device="cuda:0", strict=False
+                )
+                .eval()
+                .cuda(),
             )
             checkpoint_model.model.freeze()
             # Set up posprocessor WITHOUT mirroring for deterministic predictions
@@ -188,7 +200,9 @@ class ModelInference:
             pdb_id = pdb_path.stem  # NOTE: there is an assumption that protein filenames are unique
             out_types_file = work_dir / f"{pdb_id}.types"
 
-            pdb_gnina_file = _pdb_to_gninatypes(pdb_path=pdb_path, gninatype_output_path=gninatype_dir)
+            pdb_gnina_file = _pdb_to_gninatypes(
+                pdb_path=pdb_path, gninatype_output_path=gninatype_dir
+            )
             ligand_gnina_files = _sdf_to_gninatypes(
                 ligand_paths=list(ligand_dir.rglob(f"**/{pdb_id}*.sdf")),
                 gninatype_output_path=gninatype_dir,
@@ -216,7 +230,9 @@ class ModelInference:
             logger.info(f"Finished inference for protein '{pdb_id}'.")
         logger.info(f"Will merge results: {datetime.datetime.now().isoformat()}")
 
-        _merge_and_save_csv_in_dir(input_csv_dir=output_dir, output_dir=output_dir, filename_column_to_add="pdb_id")
+        _merge_and_save_csv_in_dir(
+            input_csv_dir=output_dir, output_dir=output_dir, filename_column_to_add="pdb_id"
+        )
         result = _get_data_from_csvs(output_dir, filename_column_to_add="model_id")
         logger.info(f"Finished predict: {datetime.datetime.now().isoformat()}")
 

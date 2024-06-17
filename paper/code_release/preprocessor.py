@@ -45,7 +45,9 @@ class ActivitySmoother:
 
 
 class Preprocessor(torch.nn.Module):
-    def __init__(self, norm_config: dict, mirror_prob=0.5, gsm: float = 1 / 4, std_max: float = 5 / 2):
+    def __init__(
+        self, norm_config: dict, mirror_prob=0.5, gsm: float = 1 / 4, std_max: float = 5 / 2
+    ):
         """Preprocessor to manage data labelling during training
         Args:
             norm_config (dict): Configuration of the statistics
@@ -74,7 +76,9 @@ class Preprocessor(torch.nn.Module):
         # Normalise Activity. Only for non-zero values.
         activity = torch.abs(activity)
         is_active = activity > 0
-        activity = (activity - self.norm_config["affinity"]["mean"]) / self.norm_config["affinity"]["std"]
+        activity = (activity - self.norm_config["affinity"]["mean"]) / self.norm_config["affinity"][
+            "std"
+        ]
 
         # Smoothing
         if self.activity_smoother is not None:
@@ -103,7 +107,9 @@ class Preprocessor(torch.nn.Module):
         Returns:
             [tuple]: activty, rmsd, dock
         """
-        activity = activity * self.norm_config["affinity"]["std"] + self.norm_config["affinity"]["mean"]
+        activity = (
+            activity * self.norm_config["affinity"]["std"] + self.norm_config["affinity"]["mean"]
+        )
         rmsd = rmsd * self.norm_config["rmsd"]["std"] + self.norm_config["rmsd"]["mean"]
         dock = dock * self.norm_config["docking"]["std"] + self.norm_config["docking"]["mean"]
         return activity, rmsd, dock

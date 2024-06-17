@@ -109,7 +109,10 @@ class GeneralTyper(molgrid.FileMappedGninaTyper):
         super(GeneralTyper, self).__init__(types_path)
 
 
-atom_num_to_gninatype_index = {atom_num: gninatypes.index(gninatype) for atom_num, gninatype in atom_num_to_gninatype_name.items()}
+atom_num_to_gninatype_index = {
+    atom_num: gninatypes.index(gninatype)
+    for atom_num, gninatype in atom_num_to_gninatype_name.items()
+}
 
 
 @contextmanager
@@ -175,7 +178,9 @@ def sdf_to_gninatypes(sdf_file: Union[str, Path], output_dir: Union[str, Path]) 
     sdf_file, output_dir = Path(sdf_file), Path(output_dir)
     conformer_position_types = sdf_to_xyz_atomic(sdf_file=sdf_file)
     if len(conformer_position_types[0]) <= 1:
-        raise RuntimeWarning(f"Cannot process {sdf_file}. Molecule has too few atoms: {conformer_position_types[0]} atoms.")
+        raise RuntimeWarning(
+            f"Cannot process {sdf_file}. Molecule has too few atoms: {conformer_position_types[0]} atoms."
+        )
 
     output_file_names = []
     for conformer_index, conformer in enumerate(conformer_position_types):
@@ -218,7 +223,9 @@ def make_types_file(
     return types_df
 
 
-warn("We are adding Hydrogens using pybel. This might not be suitable in some conditions. Please revise this in the future.")
+warn(
+    "We are adding Hydrogens using pybel. This might not be suitable in some conditions. Please revise this in the future."
+)
 warn("Also we are adding hydrogens but are not modelling the hydrogens in the protein... no need!")
 
 
@@ -233,6 +240,8 @@ def sdf_to_xyz_atomic(sdf_file: Union[str, Path]) -> List[List[AtomCoordinates]]
     for mol in mols:
         # This should not add anything, the sdf should have all implicit hydrogens, but JIC!
         mol.addh()
-        res_mol = [AtomCoordinates(a.coords[0], a.coords[1], a.coords[2], a.atomicnum) for a in mol.atoms]
+        res_mol = [
+            AtomCoordinates(a.coords[0], a.coords[1], a.coords[2], a.atomicnum) for a in mol.atoms
+        ]
         all_mols.append(res_mol)
     return all_mols
