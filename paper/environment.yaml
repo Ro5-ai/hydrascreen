@@ -1,0 +1,31 @@
+name: hydrascreen_inference_env
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - dataclasses
+  - openbabel==3.1.1
+  - python=3.9.4=hdb3f193_0
+  - pip:
+    - --extra-index-url https://download.pytorch.org/whl/cu117
+    - -f https://data.pyg.org/whl/torch-1.13.0+cu117.html
+    - boto3==1.24.67
+    - einops==0.6.1
+    - gridData==0.1.0
+    - GridDataFormats==0.6.0
+    - molgrid==0.5.1
+    - numpy==1.23.5
+    - pandas==1.4.2
+    - protobuf<=3.20.1
+    - pytest==6.2.5
+    - pytorch_lightning==2.0.4
+    - ray==1.9.2
+    - rdkit==2022.9.5
+    - requests==2.31.0
+    - ro5utils==3.4.3
+    - scikit_learn==1.2.2
+    - scipy==1.11.0
+    - torch_summary==1.4.5
+    - torch==2.0.0
+    - tqdm==4.65.0
