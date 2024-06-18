@@ -1,0 +1,10 @@
+AliphaticCarbonXSHydrophobe AliphaticCarbonXSNonHydrophobe
+AromaticCarbonXSHydrophobe AromaticCarbonXSNonHydrophobe
+Fluorine
+Bromine Iodine Chlorine
+Nitrogen NitrogenXSAcceptor
+NitrogenXSDonor NitrogenXSDonorAcceptor
+Oxygen OxygenXSAcceptor
+OxygenXSDonorAcceptor OxygenXSDonor
+Sulfur SulfurAcceptor
+Phosphorus Boron

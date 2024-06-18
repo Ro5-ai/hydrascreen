@@ -1,0 +1,8 @@
+Hydrogen PolarHydrogen
+AliphaticCarbonXSHydrophobe AliphaticCarbonXSNonHydrophobe AromaticCarbonXSHydrophobe AromaticCarbonXSNonHydrophobe
+Fluorine
+Chlorine Bromine Iodine
+Nitrogen NitrogenXSAcceptor NitrogenXSDonor NitrogenXSDonorAcceptor
+Oxygen OxygenXSAcceptor OxygenXSDonorAcceptor OxygenXSDonor
+Sulfur SulfurAcceptor
+Phosphorus Boron
