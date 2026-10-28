@@ -71,7 +71,7 @@ pandas==2.2.1
     # via hydrascreen (setup.cfg)
 pathspec==0.12.1
     # via black
-pillow==10.2.0
+pillow==13.0.0
     # via appengine-python-standard
 pip-tools==7.4.0
     # via hydrascreen (setup.cfg)
