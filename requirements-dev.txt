@@ -141,7 +141,7 @@ urllib3==1.26.18
     # via
     #   appengine-python-standard
     #   requests
-virtualenv==20.25.1
+virtualenv==21.14.13
     # via pre-commit
 wheel==0.42.0
     # via pip-tools
