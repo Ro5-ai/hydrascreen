@@ -18,7 +18,7 @@ bump2version==1.0.1
     # via hydrascreen (setup.cfg)
 cachetools==5.3.3
     # via google-auth
-certifi==2024.2.2
+certifi==2026.10.18
     # via requests
 cfgv==3.4.0
     # via pre-commit
